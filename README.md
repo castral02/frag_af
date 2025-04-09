@@ -19,8 +19,19 @@ In this variation, we correlated previously known metrics to previous data. We e
 #### LIA/LIS
 [LIA and LIS](https://github.com/flyark/AFM-LIS) is a newer metric in exploring protein-protein interactions when there is not enough predictive power. In our case, we continued using their average threshold metrics. 
 
-In order to grab LIA/LIS, we used their code to grab the materials from our AlphaPulldown and attach the LIA/LIS to the AlphaPulldown CSV. Use this [code]() to grab the LIA and LIS and attach it to the csv. 
+In order to grab LIA/LIS, we used their code to grab the materials from our AlphaPulldown and attach the LIA/LIS to the AlphaPulldown CSV. 
 
+Use this [code](pipeline/lia_lis.py) to grab the LIA and LIS and attach it to the csv. 
+
+###### Dependencies to download:
+```bash
+pip install pandas numpy absl-py biopython
+```
+
+###### How to run: 
+```bash
+python3 lia_lis.py -output_dir /path/to/AlphaPulldown/materials
+```
 ##### How to run LIA/LIS
 
 
