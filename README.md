@@ -9,7 +9,9 @@ In this study, we developed a trained classifing model in discovering dominant n
 ## What are the different variations?
 Mulitple Variations were tested and different metrics were tested in exploring these dominant negative fragments. To validate and test different metrics, we used previous [data](https://www.cell.com/cell-systems/pdfExtended/S2405-4712(21)00157-5). 
 
-When doing the screening/peptide tiling, we utilized a looping iteration of AlphaFold Multimer called [AlphaPulldown](https://github.com/KosinskiLab/AlphaPulldown). We used version 1.0.4 off of Biowulf. For MSA creation, we used a ColabFold Search. [Click Here]() to see AlphaPulldown pipeline.  
+When doing the screening/peptide tiling, we utilized a looping iteration of AlphaFold Multimer called [AlphaPulldown](https://github.com/KosinskiLab/AlphaPulldown). We used version 1.0.4 off of Biowulf. For MSA creation, we used a ColabFold Search. 
+
+[Click Here](sbatch_files_examples) to see AlphaPulldown pipeline.  
 
 ### Variation 1
 In this variation, we correlated previously known metrics to previous data. We explored four metrics: Local Interaction Area, Local Interaction Score, mpDockQ, and ipTM. 
@@ -17,7 +19,10 @@ In this variation, we correlated previously known metrics to previous data. We e
 #### LIA/LIS
 [LIA and LIS](https://github.com/flyark/AFM-LIS) is a newer metric in exploring protein-protein interactions when there is not enough predictive power. In our case, we continued using their average threshold metrics. 
 
-In order to grab LIA/LIS, we used their code to grab the materials from our AlphaPulldown 
+In order to grab LIA/LIS, we used their code to grab the materials from our AlphaPulldown and attach the LIA/LIS to the AlphaPulldown CSV. Use this [code]() to grab the LIA and LIS and attach it to the csv. 
+
+##### How to run LIA/LIS
+
 
 ## How to run the latest variation?
 
