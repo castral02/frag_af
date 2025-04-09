@@ -42,5 +42,7 @@ This project utilized OpenAI's ChatGPT to assist in generating Python code, docu
 
 ## Citation
 Biowulf Acknowledgement: This work utilized the computational resources of the NIH HPC [Biowulf cluster](https://hpc.nih.gov).
+
 AlphaPulldown: Dingquan Yu, Grzegorz Chojnowski, Maria Rosenthal, Jan Kosinski, AlphaPulldown—a python package for protein–protein interaction screens using AlphaFold-Multimer, Bioinformatics, Volume 39, Issue 1, January 2023, btac749, [paper link](https://doi.org/10.1093/bioinformatics/btac749)
+
 LIA/LIS: Kim AR, Hu Y, Comjean A, Rodiger J, Mohr SE, Perrimon N. "Enhanced Protein-Protein Interaction Discovery via AlphaFold-Multimer" bioRxiv (2024) [paper link](https://www.biorxiv.org/content/10.1101/2024.02.19.580970v1)
