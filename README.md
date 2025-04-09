@@ -9,14 +9,15 @@ In this study, we developed a trained classifing model in discovering dominant n
 ## What are the different variations?
 Mulitple Variations were tested and different metrics were tested in exploring these dominant negative fragments. To validate and test different metrics, we used previous [data](https://www.cell.com/cell-systems/pdfExtended/S2405-4712(21)00157-5). 
 
-When doing the screening/peptide tiling, we utilized a looping iteration of AlphaFold Multimer called [AlphaPulldown](https://github.com/KosinskiLab/AlphaPulldown). We used the f
+When doing the screening/peptide tiling, we utilized a looping iteration of AlphaFold Multimer called [AlphaPulldown](https://github.com/KosinskiLab/AlphaPulldown). We used version 1.0.4 off of Biowulf. For MSA creation, we used a ColabFold Search. [Click Here]() to see AlphaPulldown pipeline.  
+
 ### Variation 1
 In this variation, we correlated previously known metrics to previous data. We explored four metrics: Local Interaction Area, Local Interaction Score, mpDockQ, and ipTM. 
 
 #### LIA/LIS
 [LIA and LIS](https://github.com/flyark/AFM-LIS) is a newer metric in exploring protein-protein interactions when there is not enough predictive power. In our case, we continued using their average threshold metrics. 
 
-In order to grab LIA/LIS, we used their code to grab the materials from our Alpha
+In order to grab LIA/LIS, we used their code to grab the materials from our AlphaPulldown 
 
 ## How to run the latest variation?
 
@@ -24,4 +25,6 @@ In order to grab LIA/LIS, we used their code to grab the materials from our Alph
 This project utilized OpenAI's ChatGPT to assist in generating Python code, documentation, or other textual content.
 
 ## Citation
+Biowulf Acknowledgement: This work utilized the computational resources of the NIH HPC [Biowulf cluster](https://hpc.nih.gov).
+AlphaPulldown: Dingquan Yu, Grzegorz Chojnowski, Maria Rosenthal, Jan Kosinski, AlphaPulldown—a python package for protein–protein interaction screens using AlphaFold-Multimer, Bioinformatics, Volume 39, Issue 1, January 2023, btac749, [paper link](https://doi.org/10.1093/bioinformatics/btac749)
 LIA/LIS: Kim AR, Hu Y, Comjean A, Rodiger J, Mohr SE, Perrimon N. "Enhanced Protein-Protein Interaction Discovery via AlphaFold-Multimer" bioRxiv (2024) [paper link](https://www.biorxiv.org/content/10.1101/2024.02.19.580970v1)
