@@ -7,5 +7,21 @@ Peptide tiling is a method in which small segments of a protein interactor are s
 In this study, we developed a trained classifing model in discovering dominant negative fragments, and tested the model with metabolic proteins. 
 
 ## What are the different variations?
+Mulitple Variations were tested and different metrics were tested in exploring these dominant negative fragments. To validate and test different metrics, we used previous [data](https://www.cell.com/cell-systems/pdfExtended/S2405-4712(21)00157-5). 
+
+When doing the screening/peptide tiling, we utilized a looping iteration of AlphaFold Multimer called [AlphaPulldown](https://github.com/KosinskiLab/AlphaPulldown). We used the f
+### Variation 1
+In this variation, we correlated previously known metrics to previous data. We explored four metrics: Local Interaction Area, Local Interaction Score, mpDockQ, and ipTM. 
+
+#### LIA/LIS
+[LIA and LIS](https://github.com/flyark/AFM-LIS) is a newer metric in exploring protein-protein interactions when there is not enough predictive power. In our case, we continued using their average threshold metrics. 
+
+In order to grab LIA/LIS, we used their code to grab the materials from our Alpha
 
 ## How to run the latest variation?
+
+## Declaration of generative AI usage
+This project utilized OpenAI's ChatGPT to assist in generating Python code, documentation, or other textual content.
+
+## Citation
+LIA/LIS: Kim AR, Hu Y, Comjean A, Rodiger J, Mohr SE, Perrimon N. "Enhanced Protein-Protein Interaction Discovery via AlphaFold-Multimer" bioRxiv (2024) [paper link](https://www.biorxiv.org/content/10.1101/2024.02.19.580970v1)
