@@ -18,7 +18,10 @@ In this variation, we correlated previously known metrics to previous data. We e
 
 [Click Here](variation_1) to get the codes and information
 
-## How to run the latest variation?
+### Variation 2
+In this variation, we used acceptable thresholding metrics to filter fragments and then cluster the items based on different structural and AlphaFold metrics. There are several avenues we took in looking at this. We decided to go single thresholds of just ipTM and mpDockQ or dual thresholds were you look at LIA and LIS or mpDockQ and ipTM. We saw that there is some predictive power in the metrics; however, the precision is not that strong, therefore, we believed we can cluster the data to increase precision. 
+
+[Click Here](variation_2) to get the codes and information. 
 
 ## Declaration of generative AI usage
 This project utilized OpenAI's ChatGPT to assist in generating Python code, documentation, or other textual content.
