@@ -30,7 +30,7 @@ In this code, we decided to use two different metrics that are popular to explor
 ```bash
 pip install pandas numpy absl-py biopython openpyxl
 ```
-You can also [click here](mpdock1_iptm/variation_1_mpdockq_iptm.yml) to download the conda environment.
+You can also [click here](mpdockq_iptm/variation_1_mpdockq_iptm.yml) to download the conda environment.
 
 ### How to run: 
 This is the [code](mpdockq_iptm/variation_1_iptm_mpdock.py) to run.
