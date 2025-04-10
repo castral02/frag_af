@@ -23,6 +23,11 @@ In this variation, we used acceptable thresholding metrics to filter fragments a
 
 [Click Here](variation_2) to get the codes and information. 
 
+### Variation 3 
+In this variation, we created a trained classification machine learning model based on previous data. According to previous variations and models, the best metric for quantification is mpDockQ alone with a threshold in terms of accuracy and percision for a multitiude of proteins. 
+
+[Click Here](variation_3) to get the codes and information. 
+
 ## Declaration of generative AI usage
 This project utilized OpenAI's ChatGPT to assist in generating Python code, documentation, or other textual content.
 
