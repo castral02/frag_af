@@ -23,20 +23,37 @@ In order to grab LIA/LIS, we used their code to grab the materials from our Alph
 
 Use this [code](pipeline/lia_lis.py) to grab the LIA and LIS and attach it to the csv. 
 
-###### Dependencies to download:
+##### Dependencies to download:
 ```bash
-conda install pandas numpy absl-py biopython openpyxl
+pip install pandas numpy absl-py biopython openpyxl
 ```
 
-###### How to run: 
+You can also [click here](variation_LIA_LIS_1/variation_1_lialis.yml) to download the conda environment.
+
+##### How to run: 
+This is the [code](variation_LIA_LIS_1/variation1_lia.py) to run. 
 ```bash
 python3 variation1_lia.py -uniprot=uniprot_id -file=excel_output_name -excel=/path/to/AlphaPulldown/outputs
 ```
 
-Here is an example of the [output](pipeline/example/flt_variation1_lia_lis.xlsx)
+Here is an example of the [output](pipeline/example/flt3_variation1_lia_lis.xlsx)
 
 #### mpDockQ/ipTM
+In this code, we decided to use two different metrics that are popular to explore [ipTM](https://academic.oup.com/bioinformatics/article/26/7/889/213219?login=true) and [mpDockQ](https://www.nature.com/articles/s41467-022-33729-4).
 
+##### Dependencies to download
+```bash
+pip install pandas numpy absl-py biopython openpyxl
+```
+You can also [click here](variation_1_mpdock_iptm/variation_1.yml) to download the conda environment.
+
+##### How to run: 
+This is the [code](variation_1_mpdockq_iptm/variation_1.py) to run.
+```bash
+python3 variation_1.py -uniprot=uniprot_id -file=excel_output_name -excel=/path/to/AlphaPulldown/outputs
+```
+
+Here is an example of the [output](pipeline/example/flt3_iptm_mpdockq_v1.xlsx)
 
 ## How to run the latest variation?
 
