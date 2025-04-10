@@ -25,14 +25,17 @@ Use this [code](pipeline/lia_lis.py) to grab the LIA and LIS and attach it to th
 
 ###### Dependencies to download:
 ```bash
-pip install pandas numpy absl-py biopython
+conda install pandas numpy absl-py biopython openpyxl
 ```
 
 ###### How to run: 
 ```bash
-python3 lia_lis.py -output_dir /path/to/AlphaPulldown/materials
+python3 variation1_lia.py -uniprot=uniprot_id -file=excel_output_name -excel=/path/to/AlphaPulldown/outputs
 ```
-##### How to run LIA/LIS
+
+Here is an example of the [output](pipeline/example/flt_variation1_lia_lis.xlsx)
+
+#### mpDockQ/ipTM
 
 
 ## How to run the latest variation?
