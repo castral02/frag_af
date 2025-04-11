@@ -75,3 +75,5 @@ The way you run the code:
 ``` bash
 python3 prediction_dnf.py -uniprot=uniprot_id -file=excel_output_name -excel=/path/to/AlphaPulldown/outputs
 ```
+
+An example of the [output](../pipeline/example/flt3_version3_output.xlsx)
