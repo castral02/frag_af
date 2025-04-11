@@ -11,7 +11,7 @@ Mulitple Variations were tested and different metrics were tested in exploring t
 
 When doing the screening/peptide tiling, we utilized a looping iteration of AlphaFold Multimer called [AlphaPulldown](https://github.com/KosinskiLab/AlphaPulldown). We used version 1.0.4 off of Biowulf. For MSA creation, we used a ColabFold Search. 
 
-[Click Here](sbatch_files_examples/) to see AlphaPulldown pipeline.  
+[Click Here](sbatch_files_example/) to see AlphaPulldown pipeline.  
 
 ### Variation 1
 In this variation, we correlated previously known metrics to previous data. We explored four metrics: Local Interaction Area, Local Interaction Score, mpDockQ, and ipTM. 
