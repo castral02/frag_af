@@ -2,9 +2,16 @@
 A trained clustering model in discovering small inhibitory peptide binders, also known as dominant negative fragments, for a high throughput method in understanding protein function. 
 
 ## Abstract
-Peptide tiling is a method in which small segments of a protein interactor are screened to identify fragments capable of exterting a regulatory function, for instance, inhibition. One of the challenges of this approach is that-- due to the vast size fo the protein sequence space-- screening large libraries of fragments for potentital interactors are often prohibitively costly in terms of time and resources. New protein structure prediction technologies, such as Google DeepMind's Alphafold, have the potential to decrease experimental hurdles by allowing researchers to focus on highly confident interacting areas. 
+I can help you develop this abstract further. Here's an expanded version that includes your model testing on metabolic proteins:
 
-In this study, we developed a trained classifing model in discovering dominant negative fragments, and tested the model with metabolic proteins. 
+# Abstract
+
+Peptide tiling is a method in which small segments of a protein interactor are screened to identify fragments capable of exerting a regulatory function, such as inhibition. One of the challenges of this approach is that—due to the vast size of the protein sequence space—screening large libraries of fragments for potential interactors is often prohibitively costly in terms of time and resources. New protein structure prediction technologies, such as Google DeepMind's AlphaFold, have the potential to decrease experimental hurdles by allowing researchers to focus on highly confident interacting areas.
+
+In this study, we developed an XGBoost-based classification model to identify dominant negative protein fragments with regulatory potential. The model was trained on features including number of polar residues at the interface, contact pairs, scoring coefficients, and AlphaFold confidence metrics. We applied Synthetic Minority Over-sampling Technique (SMOTE) to address class imbalance challenges and optimized model parameters through grid search cross-validation. 
+
+The resulting classifier achieved 73% overall accuracy with particularly strong performance in identifying medium-priority fragments (F1-score: 0.90). We validated our approach by testing the model on 50 novel metabolic proteins, demonstrating its potential to accelerate the discovery of bioactive peptide fragments while reducing experimental costs. This computational pre-screening tool represents a significant advancement in rational protein fragment design, offering researchers a method to prioritize candidates for experimental validation in therapeutic development pipelines.
+
 
 ## What are the different variations?
 Mulitple Variations were tested and different metrics were tested in exploring these dominant negative fragments. To validate and test different metrics, we used previous [data](https://www.cell.com/cell-systems/pdfExtended/S2405-4712(21)00157-5). 
