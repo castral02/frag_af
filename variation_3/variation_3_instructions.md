@@ -1,5 +1,5 @@
 # Variation 3
-Variation 3 is a XGBoost Trained Model which classifies different fragments to No Pass, Low, Medium, or High Priority to discover dominant negative fragment. The data is based off of this [paper](https://www.cell.com/cell-systems/pdfExtended/S2405-4712(21)00157-5). To look at the DataFrame, [click here](library_dnf.csv).
+Variation 3 is a XGBoost Trained Model which classifies different fragments to No Pass, Low, Medium, or High Priority to discover dominant negative fragment. The data is based off of this [paper](https://www.cell.com/cell-systems/pdfExtended/S2405-4712(21)00157-5). 
 
 We developed this depending on the previous models and what features are most prominent in similarity between each classification. We noticed that the most consistently accurate model is always filtered with mpDockQ/pDockQ score. From there, we grabbed features of ipTM and other interface structural features to help with the classifcation. 
 
@@ -59,6 +59,10 @@ To look at the [log](training_info.log)
 2. Select relevant features for model training
 3. Run the script with the path to your CSV data file
 4. The model will be trained, evaluated, and saved to the specified path
+
+To train [model](model_creation.py), and here is the [training data set](library_dnf.csv)
+
+To grab a trained [model](model_xgboost_moodel.pkl)
 
 ### Development Notes
 The model normalizes features within each protein group and implements adaptive SMOTE parameters based on the smallest class size to ensure robust sampling even with limited data.
