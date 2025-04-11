@@ -66,3 +66,12 @@ To grab a trained [model](model_xgboost_moodel.pkl)
 
 ### Development Notes
 The model normalizes features within each protein group and implements adaptive SMOTE parameters based on the smallest class size to ensure robust sampling even with limited data.
+
+## How to run model:
+
+The code to create your own predictions are based [here](prediction_dnf.py)
+
+The way you run the code:
+``` bash
+python3 prediction_dnf.py -uniprot=uniprot_id -file=excel_output_name -excel=/path/to/AlphaPulldown/outputs
+```
