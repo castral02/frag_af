@@ -14,6 +14,13 @@ Mulitple Variations were tested and different metrics were tested in exploring t
 
 When doing the screening/peptide tiling, we utilized a looping iteration of AlphaFold Multimer called [AlphaPulldown](https://github.com/KosinskiLab/AlphaPulldown). We used version 1.0.4 off of Biowulf. For MSA creation, we used a ColabFold Search. 
 
+To tile the protein, we created this [code](pipeline/tiling_protein.py) to tile the protein with 60 amino acid tiles and 10 amino acid sliding window. 
+
+**How to run:**
+```bash
+python3 tiling_protein.py -uniprot_id uniprot_id_of_protein -directory path/and/name/of/file
+```
+
 [Click Here](sbatch_files_example/) to see AlphaPulldown pipeline.  
 
 ### Variation 1
