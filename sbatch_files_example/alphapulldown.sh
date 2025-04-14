@@ -14,7 +14,7 @@ set -e
 set -x  # Enable debugging
 
 # Load necessary modules
-module load colabfold alphapulldown/0.30.7
+module load colabfold alphapulldown/1.0.4
 
 # Change to the input directory
 cd "/data/CBLCCBR/af_new/Mdm4"
