@@ -1,12 +1,10 @@
 # Variation 1
-In this variation, we correlated previously known metrics to previous data. We explored four metrics: Local Interaction Area, Local Interaction Score, mpDockQ, and ipTM. 
+As initial approaches, we correlated commonly used AlphaFold Metrics to dominant negative fragments. In this repository, we explored 3 metircs: Local Interaction Area and Local Interaction Score, mpDockQ, and ipTM. 
 
 ## LIA/LIS
-[LIA and LIS](https://github.com/flyark/AFM-LIS) is a newer metric in exploring protein-protein interactions when there is not enough predictive power. In our case, we continued using their average threshold metrics. 
+Local Interaction Area and Local Interaction Score is a newly developed metric from the Perrimon Lab at Harvard. The scoring system is derived off of the AlphaFold Metric Predicted Aligned Error to discover highly interactive areas when the strucutre is small and felxible.
 
-In order to grab LIA/LIS, we used their code to grab the materials from our AlphaPulldown and attach the LIA/LIS to the AlphaPulldown CSV. 
-
-Use this [code](../pipeline/lia_lis.py) to grab the LIA and LIS and attach it to the csv. 
+We developed a small [script](../pipeline/lia_lis.py) in attaching average LIA/LIS scores from our AlphaPulldown workflow. 
 
 ### Dependencies to download:
 ```bash
@@ -24,6 +22,7 @@ python3 variation1_lia.py -uniprot=uniprot_id -file=excel_output_name -excel=/pa
 Here is an example of the [output](../pipeline/example/flt3_variation1_lia_lis.xlsx)
 
 ## mpDockQ/ipTM
+
 In this code, we decided to use two different metrics that are popular to explore [ipTM](https://academic.oup.com/bioinformatics/article/26/7/889/213219?login=true) and [mpDockQ](https://www.nature.com/articles/s41467-022-33729-4).
 
 ### Dependencies to download
@@ -39,3 +38,12 @@ python3 variation_1.py -uniprot=uniprot_id -file=excel_output_name -excel=/path/
 ```
 
 Here is an example of the [output](../pipeline/example/flt3_iptm_mpdockq_v1.xlsx)
+
+---
+
+## References
+- Bertoline, Letícia M. F., et al. *Before and after AlphaFold2: An Overview of Protein Structure Prediction*. **Frontiers in Bioinformatics**, 3, (2023). [Paper Link](https://doi.org/10.3389/fbinf.2023.1120370)
+
+- Bryant, P., Pozzati, G., Zhu, W. et al. *Predicting the structure of large protein complexes using AlphaFold and Monte Carlo tree search*. **Nat Commun**, 13, 6028 (2022). [Paper Link](https://doi.org/10.1038/s41467-022-33729-4)
+- 
+- Kim AR, Hu Y, Comjean A, Rodiger J, Mohr SE, Perrimon N. *Enhanced Protein-Protein Interaction Discovery via AlphaFold-Multimer*. **bioRxiv** (2024). [Paper Link](https://www.biorxiv.org/content/10.1101/2024.02.19.580970v1)
