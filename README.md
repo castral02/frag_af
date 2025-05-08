@@ -12,7 +12,7 @@ The resulting classifier achieved 73% overall accuracy with particularly strong 
 ## What are the different variations?
 Mulitple Variations were tested and different metrics were tested in exploring these dominant negative fragments. To validate and test different metrics, we used previous [data](https://www.cell.com/cell-systems/pdfExtended/S2405-4712(21)00157-5). 
 
-When doing the screening/peptide tiling, we utilized a looping iteration of AlphaFold Multimer called [AlphaPulldown](https://github.com/KosinskiLab/AlphaPulldown). We used version 1.0.4 off of Biowulf. For MSA creation, we used a ColabFold Search. 
+In order to explore binding of dominant negative fragments, we implemented the [AlphaPulldown (v.0.30.7)](https://academic.oup.com/bioinformatics/article/39/1/btac749/6839971) Pipeline using a ColabFold Search v1.5.5 for multiple sequence alignments. 
 
 To tile the protein, we created this [code](pipeline/tiling_protein.py) to tile the protein with 60 amino acid tiles and 10 amino acid sliding window. 
 
@@ -41,9 +41,11 @@ In this variation, we created a trained classification machine learning model ba
 ## Declaration of generative AI usage
 This project utilized OpenAI's ChatGPT to assist in generating Python code, documentation, or other textual content.
 
-## Citation
-Biowulf Acknowledgement: This work utilized the computational resources of the NIH HPC [Biowulf cluster](https://hpc.nih.gov).
+---
 
-AlphaPulldown: Dingquan Yu, Grzegorz Chojnowski, Maria Rosenthal, Jan Kosinski, AlphaPulldown—a python package for protein–protein interaction screens using AlphaFold-Multimer, Bioinformatics, Volume 39, Issue 1, January 2023, btac749, [paper link](https://doi.org/10.1093/bioinformatics/btac749)
+## References
+- Ford, K. et al. *Peptide-tiling screens of cancer drivers reveal oncogenic protein domains and associated peptide inhibitors.* **Cell Systems,** 12, (2021) [Paper Link](https://doi.org/10.1016/j.cels.2021.05.002)
 
-LIA/LIS: Kim AR, Hu Y, Comjean A, Rodiger J, Mohr SE, Perrimon N. "Enhanced Protein-Protein Interaction Discovery via AlphaFold-Multimer" bioRxiv (2024) [paper link](https://www.biorxiv.org/content/10.1101/2024.02.19.580970v1)
+- Yu, D. et al. *AlphaPulldown—a Python package for protein–protein interaction screens using AlphaFold-Multimer*, **Bioinformatics**, 39(1), (2023) [Paper Link](https://doi.org/10.1093/bioinformatics/btac749)
+
+> This work utilized the computational resources of the [NIH HPC Biowulf cluster](https://hpc.nih.gov).
