@@ -10,7 +10,7 @@ As initial approaches, we correlated commonly used AlphaFold Metrics to dominant
 
 **Workflow Image**
 
-![Workflow](../images/line_plots/workflow/Frag_af_images.png)
+![Workflow](../images/line_plots/workflow/frag_af_variation_1.heic)
 
 ## LIA/LIS
 Local Interaction Area and Local Interaction Score is a newly developed metric from the Perrimon Lab at Harvard. The scoring system is derived off of the AlphaFold Metric Predicted Aligned Error to discover highly interactive areas when the strucutre is small and felxible.
