@@ -2,16 +2,103 @@
 
 As initial approaches, we correlated commonly used AlphaFold Metrics to dominant negative fragments. In this repository, we explored 3 metircs: Local Interaction Area and Local Interaction Score, mpDockQ, and ipTM. The workflow for each of these codes stay the same throughout.
 
-1. AlphaPulldown Workflow
-2. Extracting AlphaFold Metrics
-3. Mapping Metrics onto individual amino acids
-4. Normalizing Metrics
-5. Subtracting experimentally known thresholds to the metrics
-6. Inferring Dominant Negative Fragments (DNFs)
-
 **Workflow Image**
 
 ![Workflow](../images/workflow/frag_af_variation_1.heic)
+
+1. AlphaPulldown Workflow
+2. Extracting AlphaFold Metrics
+
+mpDockQ/ipTM
+```python
+iptm_column = excel_df_sorted['iptm'].astype(float).values  # Assuming 'iptm' is the column name
+mpdock_column = excel_df_sorted['mpDockQ/pDockQ'].astype(float).values  # Assuming 'mpDockQ/pDockQ' is the column name
+```
+
+4. Mapping Metrics onto individual amino acids
+
+mpDockQ/ipTM
+```python
+def create_amino_acid_to_fragment_mapping(fragments):
+    """
+    Create a mapping of each amino acid to the fragments it belongs to.
+
+    Args:
+    - fragments (list of tuples): List of start and end positions of fragments.
+
+    Returns:
+    - dict: Mapping of amino acids to fragments.
+    """
+    amino_acid_to_fragment = {}
+    for i, (start, end) in enumerate(fragments, start=1):
+        for amino_acid in range(start, end + 1):
+            if amino_acid not in amino_acid_to_fragment:
+                amino_acid_to_fragment[amino_acid] = []
+            amino_acid_to_fragment[amino_acid].append(i)
+    return amino_acid_to_fragment
+
+def replace_amino_acid_numbers_with_scores(amino_acid_to_fragment, amino_acid_scores):
+    """
+    Replace amino acid numbers with their corresponding scores from the fragments.
+
+    Args:
+    - amino_acid_to_fragment (dict): Mapping of amino acids to fragments.
+    - amino_acid_scores (np.ndarray): Array of scores for each fragment.
+
+    Returns:
+    - list: List of scores for each amino acid.
+    """
+    replaced_array = []
+    for amino_acid in sorted(amino_acid_to_fragment.keys()):
+        fragment_numbers = amino_acid_to_fragment[amino_acid]
+        scores = []
+        for fragment_number in fragment_numbers:
+            if fragment_number - 1 < len(amino_acid_scores):
+                scores.append(amino_acid_scores[fragment_number - 1])
+            else:
+                print(f"Warning: Fragment number {fragment_number} is out of bounds for amino_acid_scores")
+        replaced_array.append(scores)
+    return replaced_array
+```
+
+5. Averaging and Subtracting Baseline
+
+```python
+def write_array_to_excel_with_adjusted_average(writer, array_data, sheet_name, baseline):
+    """
+    Write array data to an Excel sheet and adjust the average scores by subtracting the baseline.
+
+    Args:
+    - writer (pd.ExcelWriter): Excel writer object.
+    - array_data (list): Array data to write.
+    - sheet_name (str): Name of the Excel sheet.
+    - baseline (float): Baseline value to subtract from the averages.
+    """
+    # Create a DataFrame from the array data
+    df = pd.DataFrame(array_data)
+    
+    # Ensure all data is numeric, coerce non-numeric values to NaN
+    df = df.apply(pd.to_numeric, errors='coerce')
+    
+    # Calculate row averages, skipping NaN values
+    row_averages = df.mean(axis=1)
+    
+    # Add row averages as a new column
+    df['Row Average'] = row_averages
+    
+    # Add a new column with the average minus the baseline
+    df['Data Minus Baseline'] =  baseline - df['Row Average']
+    
+    # Reorder columns to move the 'Row Average' and 'Data Minus Baseline' columns to the last positions
+    columns = df.columns.tolist()
+    columns = [col for col in columns if col not in ['Row Average', 'Data Minus Baseline']] + ['Row Average', 'Data Minus Baseline']
+    df = df[columns]
+    
+    # Write the DataFrame to the specified sheet in the Excel file
+    df.to_excel(writer, sheet_name=sheet_name, index=True)
+```
+
+8. Inferring Dominant Negative Fragments (DNFs)
 
 ## LIA/LIS
 
