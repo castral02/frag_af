@@ -1,6 +1,15 @@
 # Variation 2
-In this variation, we used acceptable thresholding metrics to filter fragments and then cluster the items based on different structural and AlphaFold metrics. There are several avenues we took in looking at this. We decided to go single thresholds of just ipTM and mpDockQ or dual thresholds were you look at LIA and LIS or mpDockQ and ipTM.
-We saw that there is some predictive power in the metrics from version 1; however, the precision is not that strong, therefore, we believed we can cluster the data to increase precision.
+We evolved variation 1 into an unsupervised clustering system assuming that similar fragments will have similar features and metrics. We hypothesized that system would increase the accuracy and predictive power of inferring these DNFs. We developed two pipelines: single threshold versus dual threshold. Single threshold is exploring ipTM and mpDockQ independently; while dual is exploring ipTM and mpDockQ together. We extended this dual threshold theme using LIA/LIS which is the preferred method when determing protein-protein interaction. 
+
+**Workflow**
+1. Extracting data
+2. Filtering Fragments
+3. Normalizing data
+4. Clustering data
+5. Mapping data to individual amino acids
+6. Determining DNFs
+
+![Workflow Image]()
 
 ## Single Threshold
 In the single threshold, we only did ipTM and mpDockQ separately. 
