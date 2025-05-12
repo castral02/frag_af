@@ -1,4 +1,5 @@
 # Variation 1
+
 As initial approaches, we correlated commonly used AlphaFold Metrics to dominant negative fragments. In this repository, we explored 3 metircs: Local Interaction Area and Local Interaction Score, mpDockQ, and ipTM. The workflow for each of these codes stay the same throughout.
 
 1. AlphaPulldown Workflow
@@ -10,10 +11,13 @@ As initial approaches, we correlated commonly used AlphaFold Metrics to dominant
 
 **Workflow Image**
 
-![Workflow](../images/line_plots/workflow/frag_af_variation_1.heic)
+![Workflow](../images/workflow/frag_af_variation_1.heic)
 
 ## LIA/LIS
-Local Interaction Area and Local Interaction Score is a newly developed metric from the Perrimon Lab at Harvard. The scoring system is derived off of the AlphaFold Metric Predicted Aligned Error to discover highly interactive areas when the strucutre is small and felxible.
+
+Local Interaction Area (LIA) and Local Interaction Score (LIS) is a newly developed metric from the Perrimon Lab at Harvard. The scoring system is derived off of the AlphaFold Metric Predicted Aligned Error (PAE )to discover highly interactive areas when the strucutre is small and felxible. 
+
+We used the average LIA/LIS scores of each fragment and the threshold's from the original paper-- *Enhanced Protein-Protein Interaction Discovery via AlphaFold-Multimer*.
 
 We developed a small [script](../pipeline/lia_lis.py) in attaching average LIA/LIS scores from our AlphaPulldown workflow. 
 
@@ -34,7 +38,9 @@ Here is an example of the [output](../pipeline/example/flt3_variation1_lia_lis.x
 
 ## mpDockQ/ipTM
 
-In this code, we decided to use two different metrics that are popular to explore [ipTM](https://academic.oup.com/bioinformatics/article/26/7/889/213219?login=true) and [mpDockQ](https://www.nature.com/articles/s41467-022-33729-4).
+The other half of this variation is exploring two popular metrics: interface predicted templating modelling ([ipTM](https://academic.oup.com/bioinformatics/article/26/7/889/213219?login=true)) and [mpDockQ](https://www.nature.com/articles/s41467-022-33729-4).
+
+Thresholds were determine from 
 
 ### Dependencies to download
 ```bash
