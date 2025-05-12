@@ -2,6 +2,14 @@
 
 As initial approaches, we correlated commonly used AlphaFold Metrics to dominant negative fragments. In this repository, we explored 3 metircs: Local Interaction Area and Local Interaction Score, mpDockQ, and ipTM. The workflow for each of these codes stay the same throughout.
 
+## mpDockQ/ipTM
+We explored two popular metrics: interface predicted templating modelling ([ipTM](https://academic.oup.com/bioinformatics/article/26/7/889/213219?login=true)) and [mpDockQ](https://www.nature.com/articles/s41467-022-33729-4).
+
+Thresholds were determined from previous research:
+
+- mpDockQ: ≥ 0.173 (1, 3)
+- ipTM: ≥ 0.5 (2, 5)
+
 **Workflow Image**
 
 ![Workflow](../images/workflow/frag_af_variation_1.heic)
@@ -63,6 +71,7 @@ def replace_amino_acid_numbers_with_scores(amino_acid_to_fragment, amino_acid_sc
 
 5. Averaging and Subtracting Baseline
 
+mpDockQ/ipTM
 ```python
 def write_array_to_excel_with_adjusted_average(writer, array_data, sheet_name, baseline):
     """
@@ -100,6 +109,20 @@ def write_array_to_excel_with_adjusted_average(writer, array_data, sheet_name, b
 
 8. Inferring Dominant Negative Fragments (DNFs)
 
+### Dependencies to download
+```bash
+pip install pandas numpy absl-py biopython openpyxl
+```
+You can also [click here](mpdockq_iptm/variation_1_mpdockq_iptm.yml) to download the conda environment.
+
+### How to run: 
+This is the [code](mpdockq_iptm/variation_1_iptm_mpdock.py) to run.
+```bash
+python3 variation_1.py -uniprot=uniprot_id -file=excel_output_name -excel=/path/to/AlphaPulldown/outputs
+```
+
+Here is an example of the [output](../pipeline/example/flt3_iptm_mpdockq_v1.xlsx)
+
 ## LIA/LIS
 
 Local Interaction Area (LIA) and Local Interaction Score (LIS) is a newly developed metric from the Perrimon Lab at Harvard. The scoring system is derived off of the AlphaFold Metric Predicted Aligned Error (PAE )to discover highly interactive areas when the strucutre is small and felxible (4). 
@@ -111,6 +134,101 @@ We used the average LIA/LIS scores of each fragment and the threshold's from the
 - LIS Threshold: ≥0.073
 
 We developed a small [script](../pipeline/lia_lis.py) in attaching average LIA/LIS scores from our AlphaPulldown workflow. 
+
+**Workflow Image**
+![Workflow](../images/workflow/variation_1.heic)
+
+1. Extracting Features
+```python
+    excel_df = load_data(excel_path)
+    excel_df['numerical'] = excel_df['jobs'].apply(extract_numeric) # Extract the numeric part from the 'jobs' column and create a new 'numerical' column
+    excel_df_sorted = excel_df.sort_values(by='numerical') # Sort the DataFrame by the 'numerical' column
+    excel_df_sorted = excel_df_sorted.drop(columns=['numerical']) # Drop the 'numerical' column as it is no longer needed
+```
+
+2. Filter for LIA/LIS
+```python
+def filter_features(data, thresholds):
+    for feature, threshold in thresholds.items():
+        data = data[data[feature] >= threshold]
+    return data
+...
+    #filter data
+    lia_threhsold = {
+        "lis_score": 0.073,
+        "average lia score": 1610
+    }
+    filter_df = filter_features(excel_df_sorted, lia_threhsold)
+
+```
+
+3. Finding Multipliers
+```python
+   #making a new column to grab the multiplier 
+    excel_df_sorted['multiplier'] = excel_df_sorted['jobs'].apply(
+    lambda x: -1 if x in filter_df['jobs'].values else 1)
+    excel_df_sorted['iptm multiplied']=excel_df_sorted['iptm']*excel_df_sorted['multiplier']
+    excel_df_sorted['mpdockq multiplied']=excel_df_sorted['mpDockQ/pDockQ']*excel_df_sorted['multiplier']
+```
+
+4. Multiplying constant and mapping metric to amino acid
+```python
+def replace_amino_acid_numbers_with_scores(amino_acid_to_fragment, amino_acid_scores):
+    """
+    Replace amino acid numbers with their corresponding scores from the fragments.
+
+    Args:
+    - amino_acid_to_fragment (dict): Mapping of amino acids to fragments.
+    - amino_acid_scores (np.ndarray): Array of scores for each fragment.
+
+    Returns:
+    - list: List of scores for each amino acid.
+    """
+    replaced_array = []
+    for amino_acid in sorted(amino_acid_to_fragment.keys()):
+        fragment_numbers = amino_acid_to_fragment[amino_acid]
+        scores = []
+        for fragment_number in fragment_numbers:
+            if fragment_number - 1 < len(amino_acid_scores):
+                scores.append(amino_acid_scores[fragment_number - 1])
+            else:
+                print(f"Warning: Fragment number {fragment_number} is out of bounds for amino_acid_scores")
+        replaced_array.append(scores)
+    return replaced_array
+
+def write_array_to_excel_with_adjusted_average(writer, array_data, sheet_name):
+    """
+    Write array data to an Excel sheet and adjust the average scores by subtracting the baseline.
+
+    Args:
+    - writer (pd.ExcelWriter): Excel writer object.
+    - array_data (list): Array data to write.
+    - sheet_name (str): Name of the Excel sheet.
+    - baseline (float): Baseline value to subtract from the averages.
+    """
+    # Create a DataFrame from the array data
+    df = pd.DataFrame(array_data)
+    
+    # Ensure all data is numeric, coerce non-numeric values to NaN
+    df = df.apply(pd.to_numeric, errors='coerce')
+    
+    # Calculate row averages, skipping NaN values
+    row_averages = df.mean(axis=1)
+    
+    # Add row averages as a new column
+    df['Row Average'] = row_averages
+    
+    
+    # Reorder columns to move the 'Row Average' and 'Data Minus Baseline' columns to the last positions
+    columns = df.columns.tolist()
+    columns = [col for col in columns if col not in ['Row Average']] + ['Row Average']
+    df = df[columns]
+    
+    # Write the DataFrame to the specified sheet in the Excel file
+    df.to_excel(writer, sheet_name=sheet_name, index=True)
+```
+
+5. Determining DNFs
 
 ### Dependencies to download:
 ```bash
@@ -126,29 +244,6 @@ python3 variation1_lia.py -uniprot=uniprot_id -file=excel_output_name -excel=/pa
 ```
 
 Here is an example of the [output](../pipeline/example/flt3_variation1_lia_lis.xlsx)
-
-## mpDockQ/ipTM
-
-The other half of this variation is exploring two popular metrics: interface predicted templating modelling ([ipTM](https://academic.oup.com/bioinformatics/article/26/7/889/213219?login=true)) and [mpDockQ](https://www.nature.com/articles/s41467-022-33729-4).
-
-Thresholds were determined from previous research:
-
-- mpDockQ: ≥ 0.173 (1, 3)
-- ipTM: ≥ 0.5 (2, 5)
-
-### Dependencies to download
-```bash
-pip install pandas numpy absl-py biopython openpyxl
-```
-You can also [click here](mpdockq_iptm/variation_1_mpdockq_iptm.yml) to download the conda environment.
-
-### How to run: 
-This is the [code](mpdockq_iptm/variation_1_iptm_mpdock.py) to run.
-```bash
-python3 variation_1.py -uniprot=uniprot_id -file=excel_output_name -excel=/path/to/AlphaPulldown/outputs
-```
-
-Here is an example of the [output](../pipeline/example/flt3_iptm_mpdockq_v1.xlsx)
 
 ---
 
