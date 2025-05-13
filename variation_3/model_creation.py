@@ -206,7 +206,7 @@ if __name__ == "__main__":
 
     selected_features = ['Polar',
                          'contact_pairs','sc',
-                         'pi_score',
+                         'Hydrophobhic',
                          'iptm','known_label']  
 
     filepath = "/Users/castroverdeac/Desktop/codes_for_AF/actual_frag_af/model_variations/variation_3/XGBoost/library_dnf.csv"
