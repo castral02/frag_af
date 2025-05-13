@@ -38,7 +38,105 @@ To download the dependencies, [click here](xgboost.yml)
 
 ## The model itself:
 ### Model 
-This project implements an XGBoost-based machine learning model for classifying protein fragments based on their structural and interaction properties. The model processes protein fragment data with features such as polarity measurements, contact pairs, scoring metrics (sc), pi-scores, and AlphaFold confidence metrics (iptm, mpDockQ/pDockQ) to predict priority classes (Not Pass, Low, Medium, High).
+
+![Workflow Image](../images/workflow/variation_3.heic)
+
+The Trained XGBoost Model classifies different fragment-full protein (protein-protein) interaction into high, medium, and low priority dominant negative fragment. 
+
+
+1. Threshold
+The model was trained on a clean dataset that was described above. To increase the signal to noise ratio, we continued to filter the data using mpDockQ. As stated above, the mpDockQ filter was the most consistant and highest average accuracy for variation 1 and 2 for predicting DNFs.
+
+```python
+# Filter features based on thresholds
+def filter_features(data, thresholds):
+    for feature, threshold in thresholds.items():
+        data = data[data[feature] >= threshold]
+    return data
+...
+thresholds = {'mpDockQ/pDockQ': 0.175
+    }
+filtered_data = filter_features(data, thresholds)
+```
+
+2. Features
+Features that were placed in the model were based off of Principal Component Analysis; furthermore, we increased the predictive power by adding ipTM into the model as a feature as an assumption that the fragments adjacent to each other will have similar ipTM. 
+
+![PCA Interface](../images/information/Figure_1.png)
+
+
+PCA highlights that about 57.1% of the variance can be explained by Interface Metrics. We specifically used the biggest magnitude vector feature as the feature that is placed into the model. PCA was done on the clean dataset after being thresholded by mpDockQ. Features were then normalized. 
+
+```python
+selected_features = ['Polar',
+                         'contact_pairs','sc',
+                         'pi_score',
+                         'iptm','known_label']
+
+# Filter the data based on the feature thresholds
+    filtered_data = filter_features(data, thresholds)
+
+    # Normalize data
+    filtered_data=normalize_drop(filtered_data)
+
+    # Select only the relevant features for training
+    filtered_data = select_relevant_features(filtered_data, selected_features)
+```
+
+3. Training the model
+The dataset was broken into a 80% training and 20% testing. Furthermore, due to the medium fragments being the minority in the sample, we added artificial data using SMOTE with the strategy of overampling the underrpresented classes. We adjusted the k_neighbors--the nearest datapoints closes to the "neighborhood" of samples used to generate the synthetic samples-- dynamically according to the number of sampels in the minority class.
+
+```python
+def oversample_with_smote(X, y, strategy='minority'):
+    """
+    Apply SMOTE to oversample underrepresented classes.
+    
+    Args:
+        X (array-like): Feature matrix.
+        y (array-like): Labels.
+        strategy (str or dict): SMOTE sampling strategy. Default 'auto' = balance all classes.
+    
+    Returns:
+        X_resampled, y_resampled
+    """
+    if len(X) <= 1:
+        logging.warning("Not enough samples to apply SMOTE. Returning original data.")
+        return X, y
+
+    # Count original class distribution
+    class_counts = Counter(y)
+    logging.info(f"Original class distribution: {class_counts}")
+
+    try:
+        # Adjust k_neighbors based on smallest class
+        min_class_size = min(class_counts.values())
+        k_neighbors = min(5, min_class_size - 1) if min_class_size > 1 else 1
+
+        smote = SMOTE(sampling_strategy=strategy, random_state=42, k_neighbors=k_neighbors)
+        X_resampled, y_resampled = smote.fit_resample(X, y)
+
+        new_counts = Counter(y_resampled)
+        logging.info(f"Resampled class distribution: {new_counts}")
+
+        return X_resampled, y_resampled
+
+    except ValueError as e:
+        logging.error(f"SMOTE failed: {e}")
+        return X, y
+
+X = filtered_data.drop(columns=['known_label'])
+    y = filtered_data['known_label']
+    
+    # Apply SMOTE for oversampling
+    X_train_resampled, y_train_resampled = oversample_with_smote(X, y)
+
+    # Now split the resampled training data into new training and test sets
+    X_train, X_test, y_train, y_test = train_test_split(X_train_resampled, y_train_resampled, test_size=0.2, random_state=42)
+```
+
+4. Hyperparameterization and Optimization
+We 
+
 
 ### Key Features
 - **Data Preprocessing**: Handles missing values, normalizes features per protein group, and applies feature filtering based on configurable thresholds
@@ -115,3 +213,5 @@ An example of the [output](../pipeline/example/flt3_version3_output.xlsx)
 [2] NVIDIA, *XGBoost,* **NVIDIA,** (2025), [Link](https://www.nvidia.com/en-us/glossary/xgboost/)
 
 [3] Ford K. et al., *Peptide-tiling screens of cancer drivers reveal oncogenic protein domains and associated peptide inhibitors,* 12(7), 716-732, (2021) [Paper Link](https://doi.org/10.1016/j.cels.2021.05.002)
+
+[4]Yu, D. et al. AlphaPulldown—a Python package for protein–protein interaction screens using AlphaFold-Multimer, Bioinformatics, 39(1), (2023) [Paper Link](https://doi.org/10.1093/bioinformatics/btac749)
