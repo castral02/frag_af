@@ -24,7 +24,7 @@ def filter_features(data, thresholds):
         data = data[data[feature] >= threshold]
     numeric_cols = ['Polar',
                          'contact_pairs','sc',
-                         'pi_score',
+                         'Hydrophobhic',
                          'iptm']
     data = data.dropna(subset=numeric_cols)
     return data
