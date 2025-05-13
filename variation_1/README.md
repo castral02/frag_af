@@ -1,4 +1,4 @@
-# Variation 1
+# Variation 1: Correlating AlphaFold Metrics with DNFs
 
 As initial approaches, we correlated commonly used AlphaFold Metrics to dominant negative fragments. In this repository, we explored 3 metircs: Local Interaction Area and Local Interaction Score, mpDockQ, and ipTM. The workflow for each of these codes stay the same throughout.
 
