@@ -1,7 +1,20 @@
-# Variation 3
-Variation 3 is a XGBoost Trained Model which classifies different fragments to No Pass, Low, Medium, or High Priority to discover dominant negative fragment. The data is based off of this [paper](https://www.cell.com/cell-systems/pdfExtended/S2405-4712(21)00157-5). 
+# Variation 3: XGBoost Trained Model
+Using the knowledge on Variation 2, we decided to create a trained model. Variation 2 at high accuracy was able to determine what is **not** a DNF but had a difficulty on determining what **is** a DNF. To increase precision, we developed a *XGBoost Trained Model.* XGBoost, Extreme Gradient Boosting, is a gradient boosted decision tree which is best used for regression, classification, and ranking problems (2). In our case, we will be classifying and ranking the different fragments into **high, medium, and low** priority fragments. 
 
-We developed this depending on the previous models and what features are most prominent in similarity between each classification. We noticed that the most consistently accurate model is always filtered with mpDockQ/pDockQ score. From there, we grabbed features of ipTM and other interface structural features to help with the classifcation. 
+Before training the model, we had to clean our data (1). Our data is based of the Cell Systems Methods paper on Protein Tiling-- *Peptide-tiling screens of cancer drivers reveal oncogenic protein domains and associated peptide inhibitors* (3). However, due to the way we tiled the fragments, many of the DNFs are small interacting areas within the fragment itself making it difficult to categorize the fragment. 
+
+Classification of fragment is based on the percentage of similar amino acids to the original DNF fragment:
+
+High: +95%
+Medium: 75-95%
+Low: 50-75%
+
+With this in mind, our dataset was cleaned in two ways:
+1. We took out proteins that have small regions of DNFs from the original dataset out
+2. Fragments that score less than an average of 60% in Variation 1 and Variation 2
+
+By cleaning the dataset, we hypothesized that the model will have a stronger predictive power in terms of accuracy and precision. To look at the trained dataset, [click here](library_dnf.csv)
+
 
 ## Dependencies to Download
 To download the dependencies, [click here](xgboost.yml)
@@ -77,3 +90,11 @@ python3 prediction_dnf.py -uniprot=uniprot_id -file=excel_output_name -excel=/pa
 ```
 
 An example of the [output](../pipeline/example/flt3_version3_output.xlsx)
+
+---
+# References
+[1] Ding, B., & Koutris, P., *Model selection for machine learning: The best choice is not always the most accurate.* **IEEE Data Engineering Bulletin,** 44(1), 24–33, (2021) [Paper Link](http://sites.computer.org/debull/A21mar/p24.pdf)
+
+[2] NVIDIA, *XGBoost,* **NVIDIA,** (2025), [Link](https://www.nvidia.com/en-us/glossary/xgboost/)
+
+[3] Ford K. et al., *Peptide-tiling screens of cancer drivers reveal oncogenic protein domains and associated peptide inhibitors,* 12(7), 716-732, (2021) [Paper Link](https://doi.org/10.1016/j.cels.2021.05.002)
