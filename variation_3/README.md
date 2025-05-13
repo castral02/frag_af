@@ -1,12 +1,14 @@
 # Variation 3: XGBoost Trained Model
-Using the knowledge on Variation 2, we decided to create a trained model. Variation 2 at high accuracy was able to determine what is **not** a DNF but had a difficulty on determining what **is** a DNF. To increase precision, we developed a *XGBoost Trained Model.* XGBoost, Extreme Gradient Boosting, is a gradient boosted decision tree which is best used for regression, classification, and ranking problems (2). In our case, we will be classifying and ranking the different fragments into **high, medium, and low** priority fragments. 
+Using the knowledge on Variation 2, we decided to create a trained model. Variation 2 at high accuracy was able to determine what is **not** a DNF but had a difficulty on determining what **is** a DNF. To increase precision, we developed a *XGBoost Trained Model.* XGBoost, Extreme Gradient Boosting, is a gradient boosted decision tree which is best used for regression, classification, and ranking problems (2). In our case, we aim to classify and rank the different fragments into **high, medium, and low** priority fragments. 
 
-Before training the model, we had to clean our data (1). Our data is based of the Cell Systems Methods paper on Protein Tiling-- *Peptide-tiling screens of cancer drivers reveal oncogenic protein domains and associated peptide inhibitors* (3). However, due to the way we tiled the fragments, many of the DNFs are small interacting areas within the fragment itself making it difficult to categorize the fragment. 
+Before training the model, we had to clean our data (1). Our data is based of the Cell Systems Methods paper on Protein Tiling-- *Peptide-tiling screens of cancer drivers reveal oncogenic protein domains and associated peptide inhibitors* (3). However, due to the way we tiled the fragments, many of the DNFs are small interacting areas within the fragment itself making it difficult to categorize the fragment. In other words, the signal to noise ratio discrimination for this model to classify more difficult.
 
 Classification of fragment is based on the percentage of similar amino acids to the original DNF fragment:
 
 High: +95%
+
 Medium: 75-95%
+
 Low: 50-75%
 
 With this in mind, our dataset was cleaned in two ways:
@@ -15,12 +17,27 @@ With this in mind, our dataset was cleaned in two ways:
 
 By cleaning the dataset, we hypothesized that the model will have a stronger predictive power in terms of accuracy and precision. To look at the trained dataset, [click here](library_dnf.csv)
 
+Based on performances from Variations 1 and 2, mpDockQ, alone, had the best average accuracy; thus, we decided to use it as the threshold to lower the noise. 
+
+![Accuracy Violin Plots]()
+
+```python
+# Filter features based on thresholds
+def filter_features(data, thresholds):
+    for feature, threshold in thresholds.items():
+        data = data[data[feature] >= threshold]
+    return data
+...
+thresholds = {'mpDockQ/pDockQ': 0.175
+    }
+filtered_data = filter_features(data, thresholds)
+```
 
 ## Dependencies to Download
 To download the dependencies, [click here](xgboost.yml)
 
 ## The model itself:
-### Overview
+### Model 
 This project implements an XGBoost-based machine learning model for classifying protein fragments based on their structural and interaction properties. The model processes protein fragment data with features such as polarity measurements, contact pairs, scoring metrics (sc), pi-scores, and AlphaFold confidence metrics (iptm, mpDockQ/pDockQ) to predict priority classes (Not Pass, Low, Medium, High).
 
 ### Key Features
