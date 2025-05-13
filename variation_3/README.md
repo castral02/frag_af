@@ -44,7 +44,8 @@ To download the dependencies, [click here](xgboost.yml)
 The Trained XGBoost Model classifies different fragment-full protein (protein-protein) interaction into high, medium, and low priority dominant negative fragment. 
 
 
-1. Threshold
+**1. Threshold**
+
 The model was trained on a clean dataset that was described above. To increase the signal to noise ratio, we continued to filter the data using mpDockQ. As stated above, the mpDockQ filter was the most consistant and highest average accuracy for variation 1 and 2 for predicting DNFs.
 
 ```python
@@ -59,7 +60,8 @@ thresholds = {'mpDockQ/pDockQ': 0.175
 filtered_data = filter_features(data, thresholds)
 ```
 
-2. Features
+**2. Features**
+
 Features that were placed in the model were based off of Principal Component Analysis; furthermore, we increased the predictive power by adding ipTM into the model as a feature as an assumption that the fragments adjacent to each other will have similar ipTM. 
 
 ![PCA Interface](../images/information/Figure_1.png)
@@ -83,7 +85,8 @@ selected_features = ['Polar',
     filtered_data = select_relevant_features(filtered_data, selected_features)
 ```
 
-3. Training the model
+**3. Training the model**
+
 The dataset was broken into a 80% training and 20% testing. Furthermore, due to the medium fragments being the minority in the sample, we added artificial data using SMOTE with the strategy of overampling the underrpresented classes. We adjusted the k_neighbors--the nearest datapoints closes to the "neighborhood" of samples used to generate the synthetic samples-- dynamically according to the number of sampels in the minority class.
 
 ```python
@@ -134,47 +137,59 @@ X = filtered_data.drop(columns=['known_label'])
     X_train, X_test, y_train, y_test = train_test_split(X_train_resampled, y_train_resampled, test_size=0.2, random_state=42)
 ```
 
-4. Hyperparameterization and Optimization
-We 
+**4. Hyperparameterization and Optimization**
 
+We used a GridSearchCV to find the optimal XGBoost parameters. This allows the model to be systematically trained and evaluated dependent on each hyperparameter combination. The evaulation of this combination is through the cross validation. 
 
-### Key Features
-- **Data Preprocessing**: Handles missing values, normalizes features per protein group, and applies feature filtering based on configurable thresholds
-- **Class Imbalance Handling**: Implements SMOTE (Synthetic Minority Over-sampling Technique) to address class imbalance issues
-- **Hyperparameter Optimization**: Uses GridSearchCV to find optimal XGBoost parameters
-- **Performance Evaluation**: Provides comprehensive metrics including confusion matrices, accuracy, precision, recall, and F1 scores
-- **Feature Selection**: Allows configurable feature selection for model training
+```python
+    # Initialize XGBoost model
+    xgboost_model = xgb.XGBClassifier(
+        random_state=42,
+        eval_metric='mlogloss',
+        use_label_encoder=False
+    )
+
+    # Train the model
+    # Define parameter grid for GridSearchCV
+    param_grid = {
+        'max_depth': [3, 5, 7],
+        'learning_rate': [0.01, 0.1, 0.2],
+        'n_estimators': [100, 200, 300],
+        'subsample': [0.8, 1.0],
+        'colsample_bytree': [0.8, 1.0]
+    }
+
+    # Grid Search for tuning XGBoost hyperparameters
+    grid_search = GridSearchCV(estimator=xgboost_model, param_grid=param_grid, cv=5, scoring='f1_macro', n_jobs=-1)
+    
+    grid_search.fit(X_train, y_train)
+
+    # Best hyperparameters
+    logging.info(f"Best Parameters: {grid_search.best_params_}")
+
+    # Evaluate the model with best hyperparameters
+    best_model = grid_search.best_estimator_
+    y_pred_best = best_model.predict(X_test)
+```
 
 ### Model Performance
 To look at the [log](training_info.log)
 - **Best Hyperparameters**: 
-  - colsample_bytree: 1.0
+  - colsample_bytree: 08
   - learning_rate: 0.1
-  - max_depth: 5
-  - n_estimators: 100
+  - max_depth: 7
+  - n_estimators: 300
   - subsample: 1.0
 - **Class Distribution**:
   - Original: Not Pass (0): 130, Low (1): 25, Medium (2): 8, High (3): 15
   - After SMOTE: Not Pass (0): 130, Low (1): 25, Medium (2): 130, High (3): 15
-- **Accuracy**: 73%
-- **Macro F1 Score**: 0.49
+- **Accuracy**: 72%
+- **Macro F1 Score**: 0.50
 - **Per-Class Performance**:
-  - Not Pass (0): Precision: 0.73, Recall: 0.62, F1: 0.67
+  - Not Pass (0): Precision: 0.76, Recall: 0.62, F1: 0.68
   - Low (1): Precision: 0.00, Recall: 0.00, F1: 0.00
-  - Medium (2): Precision: 0.84, Recall: 0.96, F1: 0.90
-  - High (3): Precision: 0.50, Recall: 0.33, F1: 0.40
-
-### Technical Details
-- **Algorithm**: XGBoost with multiclass classification capability
-- **Input Features**:
-  - Polar: number of Polar Residues
-  - contact_pairs: number of atomic contacts between residues 
-  - sc: geometric shape commplementarity of protein-protein interface
-  - [pi_score](https://www.nature.com/articles/s41467-021-23692-x): assessment of protein interaction 
-  - iptm: AlphaFold confidence metric
-  - mpDockQ/pDockQ: Docking quality scores
-- **Output**: Classification into four categories (0: not_pass, 1: Low, 2: Medium, 3: High)
-- **Performance Optimization**: Cross-validation with F1-macro scoring
+  - Medium (2): Precision: 0.74, Recall: 0.93, F1: 0.83
+  - High (3): Precision: 1.00, Recall: 0.33, F1: 0.50
 
 ### Notes on Model Limitations
 - The model shows strong performance for Medium (class 2) predictions but struggles with Low (class 1) predictions
@@ -191,11 +206,6 @@ To look at the [log](training_info.log)
 To train [model](model_creation.py), and here is the [training data set](library_dnf.csv)
 
 To grab a trained [model](model_xgboost_moodel.pkl)
-
-### Development Notes
-The model normalizes features within each protein group and implements adaptive SMOTE parameters based on the smallest class size to ensure robust sampling even with limited data.
-
-## How to run model:
 
 The code to create your own predictions are based [here](prediction_dnf.py)
 
@@ -214,4 +224,4 @@ An example of the [output](../pipeline/example/flt3_version3_output.xlsx)
 
 [3] Ford K. et al., *Peptide-tiling screens of cancer drivers reveal oncogenic protein domains and associated peptide inhibitors,* 12(7), 716-732, (2021) [Paper Link](https://doi.org/10.1016/j.cels.2021.05.002)
 
-[4]Yu, D. et al. AlphaPulldown—a Python package for protein–protein interaction screens using AlphaFold-Multimer, Bioinformatics, 39(1), (2023) [Paper Link](https://doi.org/10.1093/bioinformatics/btac749)
+[4] Yu, D. et al. AlphaPulldown—a Python package for protein–protein interaction screens using AlphaFold-Multimer, Bioinformatics, 39(1), (2023) [Paper Link](https://doi.org/10.1093/bioinformatics/btac749)
