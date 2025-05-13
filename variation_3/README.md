@@ -64,8 +64,7 @@ filtered_data = filter_features(data, thresholds)
 
 Features that were placed in the model were based off of Principal Component Analysis; furthermore, we increased the predictive power by adding ipTM into the model as a feature as an assumption that the fragments adjacent to each other will have similar ipTM. 
 
-![PCA Interface](../images/information/Figure_1.png)
-
+<img src="../images/information/Figure_1.png" width="400">
 
 PCA highlights that about 57.1% of the variance can be explained by Interface Metrics. We specifically used the biggest magnitude vector feature as the feature that is placed into the model. PCA was done on the clean dataset after being thresholded by mpDockQ. Features were then normalized. 
 
