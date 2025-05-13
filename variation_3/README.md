@@ -1,7 +1,7 @@
 # Variation 3: XGBoost Trained Model
-Using the knowledge on Variation 2, we decided to create a trained model. Variation 2 at high accuracy was able to determine what is **not** a DNF but had a difficulty on determining what **is** a DNF. To increase precision, we developed a *XGBoost Trained Model.* XGBoost, Extreme Gradient Boosting, is a gradient boosted decision tree which is best used for regression, classification, and ranking problems (2). In our case, we aim to classify and rank the different fragments into **high, medium, and low** priority fragments. 
+Using the knowledge on Variation 2, we decided to create a trained model. Variation 2 was adequate in determining what is **not** a DNF, but struggled to correctly predict the correct DNFs. To increase precision, we developed a *XGBoost Trained Model.* XGBoost, Extreme Gradient Boosting, is a gradient boosted decision tree which is best used for regression, classification, and ranking problems (2). In our case, we aim to classify and rank the different fragments into **high, medium, and low** priority fragments. 
 
-Before training the model, we had to clean our data (1). Our data is based of the Cell Systems Methods paper on Protein Tiling-- *Peptide-tiling screens of cancer drivers reveal oncogenic protein domains and associated peptide inhibitors* (3). However, due to the way we tiled the fragments, many of the DNFs are small interacting areas within the fragment itself making it difficult to categorize the fragment. In other words, the signal to noise ratio discrimination for this model to classify more difficult.
+Before training the model, we had to clean our data (1). Our data is based off the Cell Systems Methods paper on Protein Tiling-- *Peptide-tiling screens of cancer drivers reveal oncogenic protein domains and associated peptide inhibitors* (3). However, due to the way we tiled the fragments and categorize them, many DNFs from the original data are small interacting areas within the fragment, making classifcation more difficult due to the low signal-to-noise ratio
 
 Classification of fragment is based on the percentage of similar amino acids to the original DNF fragment:
 
@@ -46,7 +46,7 @@ The Trained XGBoost Model classifies different fragment-full protein (protein-pr
 
 **1. Threshold**
 
-The model was trained on a clean dataset that was described above. To increase the signal to noise ratio, we continued to filter the data using mpDockQ. As stated above, the mpDockQ filter was the most consistant and highest average accuracy for variation 1 and 2 for predicting DNFs.
+The model was trained on a clean dataset that was described above. To increase the signal to noise ratio, we continued to filter the data using mpDockQ. As stated above, the mpDockQ filter constantly yielded the highest average accuracy across Variation 1 and 2 for predicting DNFs.
 
 ```python
 # Filter features based on thresholds
@@ -86,7 +86,7 @@ selected_features = ['Polar',
 
 **3. Training the model**
 
-The dataset was broken into a 80% training and 20% testing. Furthermore, due to the medium fragments being the minority in the sample, we added artificial data using SMOTE with the strategy of overampling the underrpresented classes. We adjusted the k_neighbors--the nearest datapoints closes to the "neighborhood" of samples used to generate the synthetic samples-- dynamically according to the number of sampels in the minority class.
+The dataset was broken into a 80% training and 20% testing. Furthermore, due to the medium fragments being the minority in the sample, we added artificial data using SMOTE with the strategy of oversampling the underrpresented classes. We adjusted the k_neighbors--the nearest datapoints closes to the "neighborhood" of samples used to generate the synthetic samples-- dynamically according to the number of samples in the minority class.
 
 ```python
 def oversample_with_smote(X, y, strategy='minority'):
@@ -173,18 +173,18 @@ We used a GridSearchCV to find the optimal XGBoost parameters. This allows the m
 
 ### Model Performance
 To look at the [log](training_info.log)
-- **Best Hyperparameters**: 
+**Best Hyperparameters**: 
   - colsample_bytree: 08
   - learning_rate: 0.1
   - max_depth: 7
   - n_estimators: 300
   - subsample: 1.0
-- **Class Distribution**:
+**Class Distribution**:
   - Original: Not Pass (0): 130, Low (1): 25, Medium (2): 8, High (3): 15
   - After SMOTE: Not Pass (0): 130, Low (1): 25, Medium (2): 130, High (3): 15
-- **Accuracy**: 72%
-- **Macro F1 Score**: 0.50
-- **Per-Class Performance**:
+**Accuracy**: 72%
+**Macro F1 Score**: 0.50
+**Per-Class Performance**:
   - Not Pass (0): Precision: 0.76, Recall: 0.62, F1: 0.68
   - Low (1): Precision: 0.00, Recall: 0.00, F1: 0.00
   - Medium (2): Precision: 0.74, Recall: 0.93, F1: 0.83
