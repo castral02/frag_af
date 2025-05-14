@@ -55,7 +55,7 @@ def normalize_drop(data):
     return data
 
 # Apply SMOTE for oversampling
-def oversample_with_smote(X, y, strategy='minority'):
+def oversample_with_smote(X, y, strategy='auto'):
     """
     Apply SMOTE to oversample underrepresented classes.
     
