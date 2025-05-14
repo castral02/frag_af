@@ -6,7 +6,7 @@ Peptide tiling is a method in which small segments of a protein interactor are s
 
 In this study, we developed an XGBoost-based classification model to identify dominant negative protein fragments with regulatory potential. The model was trained on features including number of polar residues at the interface, contact pairs, scoring coefficients, and AlphaFold confidence metrics. We applied Synthetic Minority Over-sampling Technique (SMOTE) to address class imbalance challenges and optimized model parameters through grid search cross-validation. 
 
-The resulting classifier achieved 82% overall accuracy with particularly strong performance in identifying medium-priority fragments (F1-score: 0.85). We validated our approach by testing the model on 50 novel metabolic proteins, demonstrating its potential to accelerate the discovery of bioactive peptide fragments while reducing experimental costs. This computational pre-screening tool represents a significant advancement in rational protein fragment design, offering researchers a method to prioritize candidates for experimental validation in therapeutic development pipelines.
+The resulting classifier achieved 82% overall accuracy with an F1-score of 0.82. We validated our approach by testing the model on 50 novel metabolic proteins, demonstrating its potential to accelerate the discovery of bioactive peptide fragments while reducing experimental costs. This computational pre-screening tool represents a significant advancement in rational protein fragment design, offering researchers a method to prioritize candidates for experimental validation in therapeutic development pipelines.
 
 
 ## What are the different variations?
@@ -15,6 +15,12 @@ Mulitple Variations were tested and different metrics were tested in exploring t
 In order to explore binding of dominant negative fragments, we implemented the [AlphaPulldown (v.0.30.7)](https://academic.oup.com/bioinformatics/article/39/1/btac749/6839971) Pipeline using a ColabFold Search v1.5.5 for multiple sequence alignments. 
 
 To tile the protein, we created this [code](pipeline/tiling_protein.py) to tile the protein with 60 amino acid tiles and 10 amino acid sliding window. 
+
+**Our Trained Model**
+
+After cleaning the database for proteins that have an accuracy >60% and without small areas of interaction, we had about 38 proteins that were not placed in the database. We placed those through the trained model, and gained an accuracy to ~55%. 
+
+![Accuracy_plot](images/information/accuracy_of_newly_looked_protein.png)
 
 **How to run:**
 ```bash
