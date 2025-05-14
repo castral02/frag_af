@@ -173,28 +173,18 @@ We used a GridSearchCV to find the optimal XGBoost parameters. This allows the m
 
 ### Model Performance
 To look at the [log](training_info.log)
+
+<img src="../images/information/Cross_va.pngg" width="500"> <img src="../images/information/Performance.png" width="500">  <img src="../images/information/confusion.png" width="500">
+
 **Best Hyperparameters**: 
-  - colsample_bytree: 0.8
+  - colsample_bytree: 1.0
   - learning_rate: 0.2
-  - max_depth: 3
+  - max_depth: 7
   - n_estimators: 300
-  - subsample: 1.0
+  - subsample: 0.8
 **Class Distribution**:
   - Original: Not Pass (0): 165, Low (1): 37, Medium (2): 24, High (3): 30
   - After SMOTE: Not Pass (0): 165, Low (1): 165, Medium (2): 165, High (3): 165
-**Accuracy**: 82%
-**F1 Score**: 82%
-**Per-Class Performance**:
-  - Not Pass (0): Precision: 0.80, Recall: 0.65, F1: 0.72
-  - Low (1): Precision: 0.82, Recall: 0.87, F1: 0.86
-  - Medium (2): Precision: 0.76, Recall: 0.96, F1: 0.85
-  - High (3): Precision: 0.88, Recall: 0.85, F1: 0.87
-
-### Notes on Model Limitations
-- The model shows strong performance for Medium (class 2) predictions but struggles with Low (class 1) predictions
-- Class imbalance remains a challenge despite SMOTE application
-- Further optimization may be needed to improve performance on minority classes
-    - It is not over representing high priority fragments; however, the model does know when the fragment is not a dominant negative fragment
 
 ### Usage
 1. Configure threshold parameters for feature filtering
