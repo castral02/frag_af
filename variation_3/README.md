@@ -15,7 +15,7 @@ With this in mind, our dataset was cleaned in two ways:
 1. We took out proteins that have small regions of DNFs from the original dataset out
 2. Fragments that score less than an average of 60% in Variation 1 and Variation 2
 
-By cleaning the dataset, we hypothesized that the model will have a stronger predictive power in terms of accuracy and precision. To look at the trained dataset, [click here](library_dnf.csv)
+By cleaning the dataset, we hypothesized that the model will have a stronger predictive power in terms of accuracy and precision. To look at the trained dataset, [click here](library.xlsx)
 
 Based on performances from Variations 1 and 2, ipTM, alone, had the best average accuracy and percision; thus, we decided to use it as the threshold to lower the noise. 
 
@@ -28,7 +28,7 @@ def filter_features(data, thresholds):
         data = data[data[feature] >= threshold]
     return data
 ...
-thresholds = {'mpDockQ/pDockQ': 0.175
+thresholds = {'iptm': 0.5
     }
 filtered_data = filter_features(data, thresholds)
 ```
@@ -46,7 +46,7 @@ The Trained XGBoost Model classifies different fragment-full protein (protein-pr
 
 **1. Threshold**
 
-The model was trained on a clean dataset that was described above. To increase the signal to noise ratio, we continued to filter the data using mpDockQ. As stated above, the ipTM filter constantly yielded the highest average accuracy across Variation 1 and 2 for predicting DNFs.
+The model was trained on a clean dataset that was described above. To increase the signal to noise ratio, we continued to filter the data using ipTM. As stated above, the ipTM filter constantly yielded the highest average accuracy across Variation 1 and 2 for predicting DNFs.
 
 ```python
 # Filter features based on thresholds
@@ -55,7 +55,7 @@ def filter_features(data, thresholds):
         data = data[data[feature] >= threshold]
     return data
 ...
-thresholds = {'mpDockQ/pDockQ': 0.175
+thresholds = {'iptm': 0.5
     }
 filtered_data = filter_features(data, thresholds)
 ```
@@ -66,13 +66,13 @@ Features that were placed in the model were based off of Principal Component Ana
 
 <img src="../images/information/Figure_1.png" width="400"> <img src="../images/information/Figure_2.png" width="400">
 
-PCA highlights that about 58.3% of the variance can be explained by Interface Metrics. We specifically used the biggest magnitude vector feature as the feature that is placed into the model. PCA was done on the clean dataset after being thresholded by mpDockQ. Features were then normalized. 
+PCA highlights that about 58.3% of the variance can be explained by Interface Metrics and 80.3% of variance can be explained by AlphaFold Metrics. We specifically used the biggest magnitude vector feature as the feature that is placed into the model. PCA was done on the clean dataset after being thresholded by ipTM. Features were then normalized accordance to their own dataset of tiled and full protein.
 
 ```python
 selected_features = ['Polar',
                          'contact_pairs','sc',
                          'Hydrophobhic',
-                         'average pae score','known_label']
+                         'average pae score', 'mpDockQ/pDockQ','known_label']
 
 # Filter the data based on the feature thresholds
     filtered_data = filter_features(data, thresholds)
@@ -174,21 +174,20 @@ We used a GridSearchCV to find the optimal XGBoost parameters. This allows the m
 ### Model Performance
 To look at the [log](training_info.log)
 **Best Hyperparameters**: 
-  - colsample_bytree: 08
-  - learning_rate: 0.1
-  - max_depth: 7
+  - colsample_bytree: 0.8
+  - learning_rate: 0.2
+  - max_depth: 3
   - n_estimators: 300
   - subsample: 1.0
 **Class Distribution**:
-  - Original: Not Pass (0): 130, Low (1): 25, Medium (2): 8, High (3): 15
-  - After SMOTE: Not Pass (0): 130, Low (1): 25, Medium (2): 130, High (3): 15
-**Accuracy**: 72%
-**Macro F1 Score**: 0.50
+  - Original: Not Pass (0): 165, Low (1): 37, Medium (2): 24, High (3): 30
+  - After SMOTE: Not Pass (0): 130, Low (1): 37, Medium (2): 165, High (3): 30
+**Accuracy**: 74%
 **Per-Class Performance**:
-  - Not Pass (0): Precision: 0.76, Recall: 0.62, F1: 0.68
+  - Not Pass (0): Precision: 0.74, Recall: 0.78, F1: 0.76
   - Low (1): Precision: 0.00, Recall: 0.00, F1: 0.00
-  - Medium (2): Precision: 0.74, Recall: 0.93, F1: 0.83
-  - High (3): Precision: 1.00, Recall: 0.33, F1: 0.50
+  - Medium (2): Precision: 0.79, Recall: 0.94, F1: 0.86
+  - High (3): Precision: 0.5, Recall: 0.17, F1: 0.25
 
 ### Notes on Model Limitations
 - The model shows strong performance for Medium (class 2) predictions but struggles with Low (class 1) predictions
@@ -202,7 +201,7 @@ To look at the [log](training_info.log)
 3. Run the script with the path to your CSV data file
 4. The model will be trained, evaluated, and saved to the specified path
 
-To train [model](model_creation.py), and here is the [training data set](library_dnf.csv)
+To train [model](model_creation.py), and here is the [training data set](library.xlsx)
 
 To grab a trained [model](model_xgboost_moodel.pkl)
 
