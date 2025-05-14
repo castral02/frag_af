@@ -6,9 +6,9 @@ We used the BIRCH system due to its ability to represent fragment similarity in 
 We implemented two strategies: 
 1. Single Threshold: mpDockQ and ipTM allowing us to assess the individual contribution of each metric separately
 ```python
-lia_threhsold = {
+mpdockq_threhsold = {
         "mpDockQ/pDockQ": 0.175}
-mpdock_threhshold = {
+iptm_threhshold = {
        "iptm": 0.5}
 ```
 2. Dual Threshold: LIA/LIS together or mpDockQ with ipTM allowing a holistic view of protein-protein interaction quality 
