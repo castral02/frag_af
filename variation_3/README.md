@@ -46,7 +46,7 @@ The Trained XGBoost Model classifies different fragment-full protein (protein-pr
 
 **1. Threshold**
 
-The model was trained on a clean dataset that was described above. To increase the signal to noise ratio, we continued to filter the data using mpDockQ. As stated above, the mpDockQ filter constantly yielded the highest average accuracy across Variation 1 and 2 for predicting DNFs.
+The model was trained on a clean dataset that was described above. To increase the signal to noise ratio, we continued to filter the data using mpDockQ. As stated above, the ipTM filter constantly yielded the highest average accuracy across Variation 1 and 2 for predicting DNFs.
 
 ```python
 # Filter features based on thresholds
@@ -62,17 +62,17 @@ filtered_data = filter_features(data, thresholds)
 
 **2. Features**
 
-Features that were placed in the model were based off of Principal Component Analysis; furthermore, we increased the predictive power by adding ipTM into the model as a feature as an assumption that the fragments adjacent to each other will have similar ipTM. 
+Features that were placed in the model were based off of Principal Component Analysis; 
 
-<img src="../images/information/Figure_1.png" width="400">
+<img src="../images/information/Figure_1.png" width="400"> <img src="../images/information/Figure_2.png" width="400">
 
-PCA highlights that about 57.1% of the variance can be explained by Interface Metrics. We specifically used the biggest magnitude vector feature as the feature that is placed into the model. PCA was done on the clean dataset after being thresholded by mpDockQ. Features were then normalized. 
+PCA highlights that about 58.3% of the variance can be explained by Interface Metrics. We specifically used the biggest magnitude vector feature as the feature that is placed into the model. PCA was done on the clean dataset after being thresholded by mpDockQ. Features were then normalized. 
 
 ```python
 selected_features = ['Polar',
                          'contact_pairs','sc',
-                         'pi_score',
-                         'iptm','known_label']
+                         'Hydrophobhic',
+                         'average pae score','known_label']
 
 # Filter the data based on the feature thresholds
     filtered_data = filter_features(data, thresholds)
