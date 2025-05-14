@@ -17,7 +17,7 @@ FLAGS = flags.FLAGS
 
 #-------------- Definitions --------------#
 def load_data(filepath):
-    return pd.read_excel(filepath)
+    return pd.read_excel(filepath, sheet_name='brafT_brafF')
 
 def filter_features(data, thresholds):
     for feature, threshold in thresholds.items():
@@ -25,7 +25,7 @@ def filter_features(data, thresholds):
     numeric_cols = ['Polar',
                          'contact_pairs','sc',
                          'Hydrophobhic',
-                         'iptm']
+                         'average pae score', 'mpDockQ/pDockQ']
     data = data.dropna(subset=numeric_cols)
     return data
 
@@ -197,13 +197,13 @@ def main(argv):
     sorted_mpdock = data_df.copy(deep=True) #this is what you are going to put in the excel
 
 #-------------- S4: Data Proceessing --------------#
-    mpdock_threhshold = {'mpDockQ/pDockQ':0.175}
+    mpdock_threhshold = {'iptm': 0.5}
     mpdock_df = filter_features(sorted_mpdock, mpdock_threhshold)
     normalize_features = normalize_drop(mpdock_df)
     cluster_features_mpdockq = ['Polar',
                          'contact_pairs','sc',
-                         'pi_score',
-                         'iptm']
+                         'Hydrophobhic',
+                         'average pae score', 'mpDockQ/pDockQ']
     processed_mpdock= normalize_features[cluster_features_mpdockq]
 
 #-------------- S5: Making Prediction --------------#
