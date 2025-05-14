@@ -33,8 +33,8 @@ def normalize_drop(data):
     data.columns = data.columns.str.strip()
     numeric_cols = ['Polar',
                          'contact_pairs','sc',
-                         'pi_score',
-                         'iptm']
+                         'Hydrophobhic',
+                         'average pae score', 'mpDockQ/pDockQ']
     data[numeric_cols] = data.groupby('tiled protein')[numeric_cols].transform(
         lambda x: MinMaxScaler().fit_transform(x.values.reshape(-1, 1)).flatten()
     )
