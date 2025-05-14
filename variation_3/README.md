@@ -19,7 +19,7 @@ By cleaning the dataset, we hypothesized that the model will have a stronger pre
 
 Based on performances from Variations 1 and 2, ipTM, alone, had the best average accuracy and percision; thus, we decided to use it as the threshold to lower the noise. 
 
-<img src="../images/information/accuracy.png" width="500"> <img src="../images/information/percision.png" width="500">
+<img src="../images/information/accuracy.png" width="500"> <img src="../images/information/precision.png" width="500">
 
 ```python
 # Filter features based on thresholds
