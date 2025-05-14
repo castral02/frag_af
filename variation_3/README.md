@@ -17,9 +17,9 @@ With this in mind, our dataset was cleaned in two ways:
 
 By cleaning the dataset, we hypothesized that the model will have a stronger predictive power in terms of accuracy and precision. To look at the trained dataset, [click here](library_dnf.csv)
 
-Based on performances from Variations 1 and 2, mpDockQ, alone, had the best average accuracy; thus, we decided to use it as the threshold to lower the noise. 
+Based on performances from Variations 1 and 2, ipTM, alone, had the best average accuracy and percision; thus, we decided to use it as the threshold to lower the noise. 
 
-![Accuracy Violin Plots]()
+<img src="../images/information/accuracy.png" width="500"> <img src="../images/information/percision.png" width="500">
 
 ```python
 # Filter features based on thresholds
