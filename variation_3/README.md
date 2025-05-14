@@ -181,13 +181,14 @@ To look at the [log](training_info.log)
   - subsample: 1.0
 **Class Distribution**:
   - Original: Not Pass (0): 165, Low (1): 37, Medium (2): 24, High (3): 30
-  - After SMOTE: Not Pass (0): 130, Low (1): 37, Medium (2): 165, High (3): 30
-**Accuracy**: 74%
+  - After SMOTE: Not Pass (0): 165, Low (1): 165, Medium (2): 165, High (3): 165
+**Accuracy**: 82%
+**F1 Score**: 82%
 **Per-Class Performance**:
-  - Not Pass (0): Precision: 0.74, Recall: 0.78, F1: 0.76
-  - Low (1): Precision: 0.00, Recall: 0.00, F1: 0.00
-  - Medium (2): Precision: 0.79, Recall: 0.94, F1: 0.86
-  - High (3): Precision: 0.5, Recall: 0.17, F1: 0.25
+  - Not Pass (0): Precision: 0.80, Recall: 0.65, F1: 0.72
+  - Low (1): Precision: 0.82, Recall: 0.87, F1: 0.86
+  - Medium (2): Precision: 0.76, Recall: 0.96, F1: 0.85
+  - High (3): Precision: 0.88, Recall: 0.85, F1: 0.87
 
 ### Notes on Model Limitations
 - The model shows strong performance for Medium (class 2) predictions but struggles with Low (class 1) predictions
