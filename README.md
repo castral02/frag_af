@@ -6,7 +6,7 @@ Peptide tiling is a method in which small segments of a protein interactor are s
 
 In this study, we developed an XGBoost-based classification model to identify dominant negative protein fragments with regulatory potential. The model was trained on features including number of polar residues at the interface, contact pairs, scoring coefficients, and AlphaFold confidence metrics. We applied Synthetic Minority Over-sampling Technique (SMOTE) to address class imbalance challenges and optimized model parameters through grid search cross-validation. 
 
-The resulting classifier achieved 74% overall accuracy with particularly strong performance in identifying medium-priority fragments (F1-score: 0.86). We validated our approach by testing the model on 50 novel metabolic proteins, demonstrating its potential to accelerate the discovery of bioactive peptide fragments while reducing experimental costs. This computational pre-screening tool represents a significant advancement in rational protein fragment design, offering researchers a method to prioritize candidates for experimental validation in therapeutic development pipelines.
+The resulting classifier achieved 82% overall accuracy with particularly strong performance in identifying medium-priority fragments (F1-score: 0.85). We validated our approach by testing the model on 50 novel metabolic proteins, demonstrating its potential to accelerate the discovery of bioactive peptide fragments while reducing experimental costs. This computational pre-screening tool represents a significant advancement in rational protein fragment design, offering researchers a method to prioritize candidates for experimental validation in therapeutic development pipelines.
 
 
 ## What are the different variations?
