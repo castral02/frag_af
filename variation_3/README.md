@@ -174,7 +174,7 @@ We used a GridSearchCV to find the optimal XGBoost parameters. This allows the m
 ### Model Performance
 To look at the [log](training_info.log)
 
-<img src="../images/information/Cross_va.pngg" width="500"> <img src="../images/information/Performance.png" width="500">  <img src="../images/information/confusion.png" width="500">
+<img src="../images/information/Cross_va.png" width="400"> <img src="../images/information/Performance.png" width="400">  <img src="../images/information/confusion.png" width="400">
 
 **Best Hyperparameters**: 
   - colsample_bytree: 1.0
