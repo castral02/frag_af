@@ -19,7 +19,7 @@ logging.basicConfig(
 
 # Load data from file
 def load_data(filepath):
-    return pd.read_csv(filepath)
+    return pd.read_excel(filepath)
 
 # Filter features based on thresholds
 def filter_features(data, thresholds):
@@ -41,15 +41,15 @@ def normalize_drop(data):
     # Drop rows with NaNs in numeric columns
     numeric_cols = ['Polar',
                          'contact_pairs','sc',
-                         'pi_score',
-                         'mpDockQ/pDockQ']
+                         'Hydrophobhic',
+                         'average pae score', 'mpDockQ/pDockQ']
     data = data.dropna(subset=numeric_cols)
 
     # Exclude label column from normalization
     numeric_cols = [col for col in numeric_cols if col != 'known_label']
 
-    # Normalize per tiled_protein
-    data[numeric_cols] = data.groupby('tiled protein')[numeric_cols].transform(
+    # Normalize per binding and tiled protein
+    data[numeric_cols] = data.groupby(['binding protein', 'tiled protein'])[numeric_cols].transform(
         lambda x: MinMaxScaler().fit_transform(x.values.reshape(-1, 1)).flatten()
     )
     return data
@@ -201,13 +201,14 @@ def main(filepath, thresholds, selected_features, rf_iterations=10):
         pickle.dump(best_model, file)
 
 if __name__ == "__main__":
-    thresholds = {'mpDockQ/pDockQ': 0.175
+    thresholds = {'iptm': 0.5
     }
 
     selected_features = ['Polar',
                          'contact_pairs','sc',
                          'Hydrophobhic',
-                         'iptm','known_label']  
+                         'average pae score', 'mpDockQ/pDockQ','known_label']  
 
-    filepath = "/Users/castroverdeac/Desktop/codes_for_AF/actual_frag_af/model_variations/variation_3/XGBoost/library_dnf.csv"
+    filepath = "/Users/castroverdeac/Desktop/codes_for_AF/actual_frag_af/model_variations/variation_3/XGBoost/library.xlsx"
     main(filepath, thresholds, selected_features)
+
