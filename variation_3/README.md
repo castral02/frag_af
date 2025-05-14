@@ -86,10 +86,10 @@ selected_features = ['Polar',
 
 **3. Training the model**
 
-The dataset was broken into a 80% training and 20% testing. Furthermore, due to the medium fragments being the minority in the sample, we added artificial data using SMOTE with the strategy of oversampling the underrpresented classes. We adjusted the k_neighbors--the nearest datapoints closes to the "neighborhood" of samples used to generate the synthetic samples-- dynamically according to the number of samples in the minority class.
+The dataset was broken into a 80% training and 20% testing. Furthermore, due to the medium fragments being the minority in the sample, we added artificial data using SMOTE with the strategy of balancing all the classes. We adjusted the k_neighbors--the nearest datapoints closes to the "neighborhood" of samples used to generate the synthetic samples-- dynamically according to the number of samples in the minority class.
 
 ```python
-def oversample_with_smote(X, y, strategy='minority'):
+def oversample_with_smote(X, y, strategy='auto'):
     """
     Apply SMOTE to oversample underrepresented classes.
     
