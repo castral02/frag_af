@@ -179,20 +179,20 @@ def main (argv):
     data_df_sorted.reset_index(drop=True, inplace=True)    # Ensure the correct handling of headers and data rows
 
     sorted_mpdock = data_df_sorted.copy(deep=True) #this is what you are going to put in the excel
-    sorted_lia =data_df_sorted.copy(deep=True) 
+    sorted_iptm =data_df_sorted.copy(deep=True) 
     #step 3: filter
-    lia_threhsold = {
+    iptm_threhsold = {
         "mpDockQ/pDockQ": 0.175,
     }
     mpdock_threhshold = {
        "iptm": 0.5
     }
-    lia_df = filter_features(sorted_lia, lia_threhsold)
+    iptm_df = filter_features(sorted_iptm, iptm_threhsold)
     mpdock_df = filter_features(sorted_mpdock, mpdock_threhshold)
-    if lia_df.empty:
-        logging.warning("No data passed the filtering LIA/LIS threshold.")
+    if iptm_df.empty:
+        logging.warning("No data passed the filtering iptm/iptm threshold.")
     else:
-        logging.info(f"Filtered data contains {len(lia_df)} rows.")
+        logging.info(f"Filtered data contains {len(iptm_df)} rows.")
     
     if mpdock_df.empty:
         logging.warning("No data passed the filtering mpDockQ/contact threshold.")
@@ -210,7 +210,7 @@ def main (argv):
     else:
         logging.info("All required columns for normalization are present.")
     
-    missing_cols = [col for col in columns_lis if col not in lia_df.columns]
+    missing_cols = [col for col in columns_lis if col not in iptm_df.columns]
     if missing_cols:
         logging.error(f"Missing columns for normalization: {missing_cols}")
         return
@@ -240,15 +240,15 @@ def main (argv):
         normdock_df.rename(columns=rename_dict, inplace=True)
 
     "handling empty filtered data"
-    if lia_df.empty:
-        normlia_df = pd.DataFrame(columns=lia_df.columns)
+    if iptm_df.empty:
+        normiptm_df = pd.DataFrame(columns=iptm_df.columns)
         logging.info("Created an empty DataFrame for normalization since no data passed filtering.")
     else:
-        normlia_df = lia_df.copy()
+        normiptm_df = iptm_df.copy()
         scaler = StandardScaler()
         
         # Normalize specified columns
-        normlia_df[columns_lis] = scaler.fit_transform(lia_df[columns_lis])
+        normiptm_df[columns_lis] = scaler.fit_transform(iptm_df[columns_lis])
         logging.info("Data normalization completed successfully.")
         
         # Rename columns
@@ -259,7 +259,7 @@ def main (argv):
             'Num_intf_residues': 'norm_num',
             'contact_pairs':'norm_contact'
         }
-        normlia_df.rename(columns=rename_dict, inplace=True)
+        normiptm_df.rename(columns=rename_dict, inplace=True)
 
     #Step 4: Clustering
     if not normdock_df.empty:
@@ -271,11 +271,11 @@ def main (argv):
     else:
        logging.warning("Skipping clustering due to empty normalized data.")
 
-    if not normlia_df.empty:
+    if not normiptm_df.empty:
        birch = Birch(branching_factor=50, threshold=0.3, n_clusters=4)
-       birch.fit(normlia_df[['norm_mpdock', 'norm_pi', 'norm_num', 'norm_contact', 'norm_polar']])       
+       birch.fit(normiptm_df[['norm_mpdock', 'norm_pi', 'norm_num', 'norm_contact', 'norm_polar']])       
        labels = birch.labels_
-       normlia_df['Cluster'] = labels
+       normiptm_df['Cluster'] = labels
        logging.info(f"Clustering completed with {len(set(labels))} clusters identified.")
     else:
        logging.warning("Skipping clustering due to empty normalized data.")
@@ -296,7 +296,7 @@ def main (argv):
     amino_acid_to_fragment = create_amino_acid_to_fragment_mapping(fragments)
     average_mpDockQ = replace_amino_acid_numbers_with_scores(amino_acid_to_fragment, mpdock_column)
     average_mpDockQ =pd.DataFrame(average_mpDockQ)
-    lis_copy = average_mpDockQ.copy(deep=True) #this is where you append the new materials
+    iptm_copy = average_mpDockQ.copy(deep=True) #this is where you append the new materials
     mpdock_copy = average_mpDockQ.copy(deep=True)
 
     #Step 6: Mapping to the original DataFrame
@@ -356,26 +356,26 @@ def main (argv):
             # Map the priority to the sequence
             score_mpdock = priority_map.get(fragment['Predicted_Priority'].lower(), 0)  # Default to 0 if no match
             amino_acid_scores_mpdock[start:end] += score_mpdock / (end - start)  # Distribute the score evenly
-    "lis/lia"
-    if 'Cluster' not in normlia_df.columns: 
-        normlia_df['Predicted_Priority']='not_pass'
-        job_pred_priority_lia = dict(zip(normlia_df['jobs'], normlia_df['Predicted_Priority']))
-        sorted_lia['Predicted_Priority'] = sorted_lia['jobs'].map(job_pred_priority_lia).fillna('not_pass')
+    "iptm/iptm"
+    if 'Cluster' not in normiptm_df.columns: 
+        normiptm_df['Predicted_Priority']='not_pass'
+        job_pred_priority_iptm = dict(zip(normiptm_df['jobs'], normiptm_df['Predicted_Priority']))
+        sorted_iptm['Predicted_Priority'] = sorted_iptm['jobs'].map(job_pred_priority_iptm).fillna('not_pass')
         print("The 'cluster' column is missing.")
     else:
         try:
             label_mapping = {0: 'not_pass', 1: 'Low', 2: 'Medium', 3: 'High'}
-            labels_lia = normlia_df['Cluster']  # or any other way to define labels
-            if 'jobs' not in normlia_df.columns or 'jobs' not in sorted_lia.columns:
+            labels_iptm = normiptm_df['Cluster']  # or any other way to define labels
+            if 'jobs' not in normiptm_df.columns or 'jobs' not in sorted_iptm.columns:
                 logging.error("'jobs' column missing in normalized_df or data_df_sorted.")
                 raise KeyError("'jobs' column is required.")
             try:
-                normlia_df['Predicted_Priority'] = [label_mapping[pred] if pred in label_mapping else 'Unknown' for pred in labels_lia]
+                normiptm_df['Predicted_Priority'] = [label_mapping[pred] if pred in label_mapping else 'Unknown' for pred in labels_iptm]
             except KeyError as e:
                 logging.error(f"Mapping error: {e}")
                 raise
-            job_pred_priority_lia = dict(zip(normlia_df['jobs'], normlia_df['Predicted_Priority']))
-            sorted_lia['Predicted_Priority'] = sorted_lia['jobs'].map(job_pred_priority_lia).fillna('not_pass')
+            job_pred_priority_iptm = dict(zip(normiptm_df['jobs'], normiptm_df['Predicted_Priority']))
+            sorted_iptm['Predicted_Priority'] = sorted_iptm['jobs'].map(job_pred_priority_iptm).fillna('not_pass')
             logging.info("Successfully mapped predicted priorities to the original dataframe.")
         except KeyError as e:
             logging.error(f"Mapping error: {e}")
@@ -393,31 +393,31 @@ def main (argv):
     }
 
     # Match fragments to tiled sequences
-    job_titles_lia = sorted_lia['jobs']  # Extract jobs column
-    fragment_numbers_lia = job_titles_lia.str.extract(r'Fragment_(\d+)', expand=False)  # Extract fragment number
-    fragment_numbers_lia = fragment_numbers_lia.astype(int) - 1  # Convert to zero-based index
+    job_titles_iptm = sorted_iptm['jobs']  # Extract jobs column
+    fragment_numbers_iptm = job_titles_iptm.str.extract(r'Fragment_(\d+)', expand=False)  # Extract fragment number
+    fragment_numbers_iptm = fragment_numbers_iptm.astype(int) - 1  # Convert to zero-based index
     
     # Add corresponding tiled sequences to the processed_data DataFrame
-    sorted_lia['tiled_sequence'] = fragment_numbers_lia.apply(
+    sorted_iptm['tiled_sequence'] = fragment_numbers_iptm.apply(
         lambda idx: sequence[idx*10:idx*10+60] if idx*10 + 60 <= len(sequence) else None
     )
     sequence_length = len(sequence)
-    amino_acid_scores_lia = np.zeros(sequence_length)
+    amino_acid_scores_iptm = np.zeros(sequence_length)
 
-    for _, fragment in sorted_lia.iterrows():
+    for _, fragment in sorted_iptm.iterrows():
         fragment_sequence = fragment['tiled_sequence']
         if fragment_sequence:
             start = sequence.find(fragment_sequence)  # Find the start position of the fragment in the sequence
             end = start + len(fragment_sequence)
 
             # Map the priority to the sequence
-            score_lia = priority_map.get(fragment['Predicted_Priority'].lower(), 0)  # Default to 0 if no match
-            amino_acid_scores_lia[start:end] += score_lia / (end - start)  # Distribute the score evenly
+            score_iptm = priority_map.get(fragment['Predicted_Priority'].lower(), 0)  # Default to 0 if no match
+            amino_acid_scores_iptm[start:end] += score_iptm / (end - start)  # Distribute the score evenly
     amino_acid_scores_mpdock = pd.DataFrame(amino_acid_scores_mpdock)
-    amino_acid_scores_lia = pd.DataFrame(amino_acid_scores_lia)
+    amino_acid_scores_iptm = pd.DataFrame(amino_acid_scores_iptm)
 
     #Step 7: multiplying number to mpDockQ 
-    lis_excel = write_array_to_excel_with_adjusted_average(lis_copy, amino_acid_scores_lia)
+    iptm_excel = write_array_to_excel_with_adjusted_average(iptm_copy, amino_acid_scores_iptm)
     mpdock_excel = write_array_to_excel_with_adjusted_average(mpdock_copy, amino_acid_scores_mpdock)
 
       # Step 11: Excel output
@@ -427,8 +427,8 @@ def main (argv):
         with pd.ExcelWriter(output_file, engine='openpyxl') as writer:
             data_df_sorted.to_excel(writer, sheet_name='predictions', index=False)
             normdock_df.to_excel(writer, sheet_name='iptm', index=False)
-            normlia_df.to_excel(writer, sheet_name='mpdock', index=False)
-            lis_excel.to_excel(writer, sheet_name='mpdock scores', index=True)
+            normiptm_df.to_excel(writer, sheet_name='mpdock', index=False)
+            iptm_excel.to_excel(writer, sheet_name='mpdock scores', index=True)
             mpdock_excel.to_excel(writer, sheet_name='iptm scores', index=True)
         logging.info(f"Excel file successfully saved at {output_file}.")
     except Exception as e:
