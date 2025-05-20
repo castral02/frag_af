@@ -1,9 +1,10 @@
 # Variation 2: Unsupervised BIRCH Clustering
-We evolved variation 1 into an unsupervised clusterng framework. We generated 60 amino acid residue fragments using a sliding window of 10 resiudes, resulting in a 50-residue overlap between adjacent fragments. We hypothesized that the 50 amino acid overlap would cause fragments to have similar interface features and AlphaFold Metrics (i.e. mpDockQ and ipTM) allowing us to cluster fragments due to their comparable binding modes. To capture these relationships, we applied **BIRCH (Balanced Iterative Reducing and Clustering using Hierarchies)**. BIRCH is a hierarchical clustering algorithm that is well-suited for large datasets, and for our case, incremental learning (1)
+We evolved variation 1 into an unsupervised clustering framework. We generated 60 amino acid residue fragments using a sliding window of 10 residues, resulting in a 50-residue overlap between adjacent fragments. We hypothesized that the 50 amino acid overlap would cause fragments to have similar interface features and AlphaFold Metrics (i.e. mpDockQ and ipTM) allowing us to cluster fragments due to their comparable binding modes. To capture these relationships, we applied **BIRCH (Balanced Iterative Reducing and Clustering using Hierarchies)**. BIRCH is a hierarchical clustering algorithm that is well-suited for large datasets, and for our case, incremental learning (1)
 
-We used the BIRCH system due to its ability to represent fragment similarity in a heirarchical branching structure, allowing an intuitive classification into **high, medium, and low** priority clusters based on interaciton potentials. The system reflects the underlying biological assumption that protein fragments with similar sequences will have similar interface characteristics therfore exhibit similar binding modes (2).
+We used the BIRCH system due to its ability to represent fragment similarity in a hierarchical branching structure, allowing an intuitive classification into **high, medium, and low** priority clusters based on interaction potentials. The system reflects the underlying biological assumption that protein fragments with similar sequences will have similar interface characteristics and therefore exhibit similar binding modes (2).
 
 We implemented two strategies: 
+
 1. Single Threshold: mpDockQ and ipTM allowing us to assess the individual contribution of each metric separately
 ```python
 mpdockq_threhsold = {
@@ -11,6 +12,7 @@ mpdockq_threhsold = {
 iptm_threhshold = {
        "iptm": 0.5}
 ```
+
 2. Dual Threshold: LIA/LIS together or mpDockQ with ipTM allowing a holistic view of protein-protein interaction quality 
 ```python
 lia_threhsold = {
@@ -179,8 +181,8 @@ def filter_features(data, thresholds):
     lis_copy = average_mpDockQ.copy(deep=True) #this is where you append the new materials
     mpdock_copy = average_mpDockQ.copy(deep=True)
 ```
-5. Mapping data to individual amino acids
 
+5. Mapping data to individual amino acids
 ```python
  sequence = get_protein_sequence(id)
     if sequence is None:
