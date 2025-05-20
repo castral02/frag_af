@@ -1,7 +1,7 @@
 # Variation 3: XGBoost Trained Model
-Using the knowledge on Variation 2, we decided to create a trained model. Variation 2 was adequate in determining what is **not** a DNF, but struggled to correctly predict the correct DNFs. To increase precision, we developed a *XGBoost Trained Model.* XGBoost, Extreme Gradient Boosting, is a gradient boosted decision tree which is best used for regression, classification, and ranking problems (2). In our case, we aim to classify and rank the different fragments into **high, medium, and low** priority fragments. 
+Using the knowledge from Variation 2, we decided to create a trained model. Variation 2 was adequate in determining what is **not** a DNF, but struggled to correctly predict the correct DNFs. To increase precision, we developed a *XGBoost Trained Model.* XGBoost, Extreme Gradient Boosting, is a gradient boosted decision tree which is best used for regression, classification, and ranking problems (2). In our case, we aim to classify and rank the different fragments into **high, medium, and low** priority fragments. 
 
-Before training the model, we had to clean our data (1). Our data is based off the Cell Systems Methods paper on Protein Tiling-- *Peptide-tiling screens of cancer drivers reveal oncogenic protein domains and associated peptide inhibitors* (3). However, due to the way we tiled the fragments and categorize them, many DNFs from the original data are small interacting areas within the fragment, making classifcation more difficult due to the low signal-to-noise ratio
+Before training the model, we had to clean our data (1). Our data is based on the Cell Systems Methods paper on Protein Tiling-- *Peptide-tiling screens of cancer drivers reveal oncogenic protein domains and associated peptide inhibitors* (3). However, due to the way we tiled and categorized the fragments, many DNFs from the original data are small interacting areas within the fragment, making classification more difficult due to the low signal-to-noise ratio
 
 Classification of fragment is based on the percentage of similar amino acids to the original DNF fragment:
 
@@ -12,12 +12,12 @@ Medium: 75-95%
 Low: 50-75%
 
 With this in mind, our dataset was cleaned in two ways:
-1. We took out proteins that have small regions of DNFs from the original dataset out
-2. Fragments that score less than an average of 60% in Variation 1 and Variation 2
+1. We took out proteins from the original dataset that have small regions of DNFs.
+2. We took out fragments that score less than an average of 60% in Variation 1 and Variation 2
 
 By cleaning the dataset, we hypothesized that the model will have a stronger predictive power in terms of accuracy and precision. To look at the trained dataset, [click here](library.xlsx)
 
-Based on performances from Variations 1 and 2, ipTM, alone, had the best average accuracy and percision; thus, we decided to use it as the threshold to lower the noise. 
+Based on performances from Variations 1 and 2, ipTM alone had the best average accuracy and precision; thus, we decided to use it as the threshold to lower the noise. 
 
 <img src="../images/information/accuracy.png" width="500"> <img src="../images/information/precision.png" width="500">
 
@@ -41,7 +41,7 @@ To download the dependencies, [click here](xgboost.yml)
 
 ![Workflow Image](../images/workflow/variation_3.heic)
 
-The Trained XGBoost Model classifies different fragment-full protein (protein-protein) interaction into high, medium, and low priority dominant negative fragment. 
+The Trained XGBoost Model classifies different fragment-full protein (protein-protein) interactions into high, medium, and low priority dominant negative fragments. 
 
 
 **1. Threshold**
@@ -86,7 +86,7 @@ selected_features = ['Polar',
 
 **3. Training the model**
 
-The dataset was broken into a 80% training and 20% testing. Furthermore, due to the medium fragments being the minority in the sample, we added artificial data using SMOTE with the strategy of balancing all the classes. We adjusted the k_neighbors--the nearest datapoints closes to the "neighborhood" of samples used to generate the synthetic samples-- dynamically according to the number of samples in the minority class.
+The dataset was broken into 80% training and 20% testing. Furthermore, to increase accuracy and predictive power, we added artificial data using SMOTe with the strategy of balancing all the priority classes. We adjusted the k_neighbors--the nearest data points closest to the "neighborhood" of samples used to generate the synthetic samples-- dynamically according to the number of samples in the minority class.
 
 ```python
 def oversample_with_smote(X, y, strategy='auto'):
@@ -138,7 +138,7 @@ X = filtered_data.drop(columns=['known_label'])
 
 **4. Hyperparameterization and Optimization**
 
-We used a GridSearchCV to find the optimal XGBoost parameters. This allows the model to be systematically trained and evaluated dependent on each hyperparameter combination. The evaulation of this combination is through the cross validation. 
+We used a GridSearchCV to find the optimal XGBoost parameters. This allows the model to be systematically trained and evaluated dependent on each hyperparameter combination. The evaluation of this combination is through the cross validation. 
 
 ```python
     # Initialize XGBoost model
