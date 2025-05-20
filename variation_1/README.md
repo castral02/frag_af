@@ -2,7 +2,7 @@
 
 As initial approaches, we correlated commonly used AlphaFold Metrics to dominant negative fragments. In this repository, we explored 3 metrics: Local Interaction Area and Local Interaction Score, mpDockQ, and ipTM.
 
-## mpDockQ/ipTM
+## mpDockQ & ipTM
 We explored two popular metrics: interface predicted templating modelling ([ipTM](https://academic.oup.com/bioinformatics/article/26/7/889/213219?login=true)) and [mpDockQ](https://www.nature.com/articles/s41467-022-33729-4).
 
 Thresholds were determined from previous research:
@@ -123,9 +123,9 @@ python3 variation_1.py -uniprot=uniprot_id -file=excel_output_name -excel=/path/
 
 Here is an example of the [output](../pipeline/example/flt3_iptm_mpdockq_v1.xlsx)
 
-## LIA/LIS
+## LIA & LIS
 
-Local Interaction Area (LIA) and Local Interaction Score (LIS) is a newly developed metric from the Perrimon Lab at Harvard. The scoring system is derived off of the AlphaFold Metric Predicted Aligned Error (PAE )to discover highly interactive areas when the strucutre is small and felxible (4). 
+Local Interaction Area (LIA) and Local Interaction Score (LIS) is a newly developed metric from the Perrimon Lab at Harvard. The scoring system is derived off of the AlphaFold Metric Predicted Aligned Error (PAE) to discover highly interactive areas when the strucutre is small and felxible (4). 
 
 We used the average LIA/LIS scores of each fragment and the threshold's from the original paper-- *Enhanced Protein-Protein Interaction Discovery via AlphaFold-Multimer*.
 
