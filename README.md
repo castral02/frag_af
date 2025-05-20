@@ -1,8 +1,8 @@
 # Frag-AF
-A trained clustering model in discovering small inhibitory peptide binders, also known as dominant negative fragments, for a high throughput method in understanding protein function. 
+A clustering model trained in discovering small inhibitory peptide binders, also known as dominant negative fragments (DNFs), as a high throughput method to understand protein function. 
 
 ## Abstract
-Peptide tiling is a method in which small segments of a protein interactor are screened to identify fragments capable of exerting a regulatory function, such as inhibition. One of the challenges of this approach is that—due to the vast size of the protein sequence space—screening large libraries of fragments for potential interactors is often prohibitively costly in terms of time and resources. New protein structure prediction technologies, such as Google DeepMind's AlphaFold, have the potential to decrease experimental hurdles by allowing researchers to focus on highly confident interacting areas.
+Peptide tiling is a method in which small segments of a protein interactor are screened to identify fragments capable of exerting a regulatory function, such as inhibition. One of the challenges of this approach is that—due to the vast size of the protein sequence space—screening large libraries of fragments for potential interactors is often prohibitied by time, cost, or resources. New protein structure prediction technologies, such as Google DeepMind's AlphaFold, have the potential to decrease experimental hurdles by allowing researchers to focus on highly confident interacting areas.
 
 In this study, we developed an XGBoost-based classification model to identify dominant negative protein fragments with regulatory potential. The model was trained on features including number of polar residues at the interface, contact pairs, scoring coefficients, and AlphaFold confidence metrics. We applied Synthetic Minority Over-sampling Technique (SMOTE) to address class imbalance challenges and optimized model parameters through grid search cross-validation. 
 
@@ -10,15 +10,16 @@ The resulting classifier achieved 82% overall accuracy with an F1-score of 0.82.
 
 
 ## What are the different variations?
-Mulitple Variations were tested and different metrics were tested in exploring these dominant negative fragments. To validate and test different metrics, we used previous [data](https://www.cell.com/cell-systems/pdfExtended/S2405-4712(21)00157-5). 
+Multiple variations and different metrics were tested in exploring these dominant negative fragments. We used previous [data](https://www.cell.com/cell-systems/pdfExtended/S2405-4712(21)00157-5) to test and validate the different variations and metrics. 
 
 In order to explore binding of dominant negative fragments, we implemented the [AlphaPulldown (v.0.30.7)](https://academic.oup.com/bioinformatics/article/39/1/btac749/6839971) Pipeline using a ColabFold Search v1.5.5 for multiple sequence alignments. 
 
-To tile the protein, we created this [code](pipeline/tiling_protein.py) to tile the protein with 60 amino acid tiles and 10 amino acid sliding window. 
+We created this [code](pipeline/tiling_protein.py) to tile the protein with 60 amino acid tiles and 10 amino acid sliding window. 
 
 **Our Trained Model**
 
-After cleaning the database for proteins that have an accuracy >60% and without small areas of interaction, we had about 38 proteins that were not placed in the database. We placed those through the trained model, and gained an accuracy to ~55%. 
+In order to train the model on "good" data, we wanted to curate the dataset to ensure we are gaining accurate and percise results. With that in mind, we cleaned our database using several parameters: retaining only proteins from the latest variations, metrics with an average accuracy above 60%, and entries with sufficiently large interaction areas (n=51 tiled proteins). The remaining 38 proteins that were not placed in the database were processed and predicted in the trained model, averaging an accuracy of ~55%.
+
 
 ![Accuracy_plot](images/information/accuracy_of_newly_looked_protein.png)
 
@@ -35,12 +36,12 @@ In this variation, we correlated previously known metrics to previous data. We e
 [Click Here](variation_1) to get the codes and information
 
 ### Variation 2
-In this variation, we used acceptable thresholding metrics to filter fragments and then cluster the items based on different structural and AlphaFold metrics. There are several avenues we took in looking at this. We decided to go single thresholds of just ipTM and mpDockQ or dual thresholds were you look at LIA and LIS or mpDockQ and ipTM. We saw that there is some predictive power in the metrics; however, the precision is not that strong, therefore, we believed we can cluster the data to increase precision. 
+In this variation, we used acceptable thresholding metrics to filter fragments and then cluster the items based on different structural and AlphaFold metrics. We adopted various avenues to predict DNFs. We decided to use single thresholds of just ipTM and mpDockQ or dual thresholds employing LIA and LIS or mpDockQ and ipTM. We saw that there is some predictive power in the metrics; however, the precision lacks strength. Therefore, we sought to cluster the data to increase precision. 
 
 [Click Here](variation_2) to get the codes and information. 
 
 ### Variation 3 
-In this variation, we created a trained classification machine learning model based on previous data. According to previous variations and models, the best metric for quantification is mpDockQ alone with a threshold in terms of accuracy and percision for a multitiude of proteins. 
+In this variation, we created a trained classification machine learning model based on previous data. According to previous variations and models, the best metric for increasing signal to noise ratio is ipTM alone as a threshold in terms of [accuracy and percision](variation_3/README.md) for a multitiude of protein.
 
 [Click Here](variation_3) to get the codes and information. 
 
