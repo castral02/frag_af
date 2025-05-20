@@ -1,6 +1,6 @@
 # Variation 1: Correlating AlphaFold Metrics with DNFs
 
-As initial approaches, we correlated commonly used AlphaFold Metrics to dominant negative fragments. In this repository, we explored 3 metircs: Local Interaction Area and Local Interaction Score, mpDockQ, and ipTM. The workflow for each of these codes stay the same throughout.
+As initial approaches, we correlated commonly used AlphaFold Metrics to dominant negative fragments. In this repository, we explored 3 metrics: Local Interaction Area and Local Interaction Score, mpDockQ, and ipTM. The workflow for each of these codes stays the same throughout.
 
 ## mpDockQ/ipTM
 We explored two popular metrics: interface predicted templating modelling ([ipTM](https://academic.oup.com/bioinformatics/article/26/7/889/213219?login=true)) and [mpDockQ](https://www.nature.com/articles/s41467-022-33729-4).
